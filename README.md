@@ -2,7 +2,7 @@
 
 ---
 
-```markdown
+markdown
 # MAGI Strategic Advisor
 
 > 三重决策人格协同运作的战略参谋系统 —— 让每一个重大决策都经得起三个视角的审视。
@@ -33,8 +33,6 @@
 
 ## 目录结构
 
-```
-
 magi-advisor/
 ├── README.md                           # 本文件
 ├── SKILL.md                            # 技能总入口（渐进式披露第一层）
@@ -49,8 +47,6 @@ magi-advisor/
     ├── weighted-scoring.py             # 加权评分计算脚本
     └── risk-matrix-gen.py              # 风险矩阵生成脚本（终端/HTML）
     
-```
-
 ---
 
 ## 快速开始
@@ -100,13 +96,13 @@ MAGI 根据问题性质自动选择分析模式，也可由用户手动指定。
 3. 综合裁决 → 投票汇总，输出最终建议
 
 **输出结构**：
-```
+
  结论与推荐
  MELCHIOR 判断
  BALTHASAR 判断
  CASPER 判断
  综合裁决（投票结果 + 前提条件 + 监控指标）
-```
+
 
 ### 模式二：风险评估
 
@@ -119,13 +115,13 @@ MAGI 根据问题性质自动选择分析模式，也可由用户手动指定。
 4. 综合风险裁决 + 缓解建议 + 止损线
 
 **输出结构**：
-```
+
  风险总览（整体等级 + 是否触发否决）
  MELCHIOR 风险判断（概率化分析）
  BALTHASAR 风险判断（最坏情景 + 底线评估）
  CASPER 风险判断（隐性因素 + 软性风险）
  综合裁决（缓解建议表 + 监控指标 + 止损线）
-```
+
 
 ### 模式三：多方案比选
 
@@ -138,13 +134,13 @@ MAGI 根据问题性质自动选择分析模式，也可由用户手动指定。
 4. 投票裁决 → 分歧分析 + 执行建议
 
 **输出结构**：
-```
+
  比选结论（推荐方案 + 置信度）
 综合评分排名表
 投票明细表
  分歧分析 + 关键维度对比
 执行建议（前提条件 + 备选方案 + 监控指标 + 复盘节点）
-```
+
 
 ---
 
@@ -152,7 +148,7 @@ MAGI 根据问题性质自动选择分析模式，也可由用户手动指定。
 
 MAGI 采用渐进式技能加载，避免一次性暴露全部内容：
 
-```
+
 用户提问
   │
   ├─ 简单战略问题 ──→ SKILL.md ──→ prompts/strategic-analysis.md
@@ -165,7 +161,7 @@ MAGI 采用渐进式技能加载，避免一次性暴露全部内容：
   │                                      └─→ scripts/weighted-scoring.py
   │
   └─ 任何模式 ─────→ reference/magi-framework.md（始终加载）
-```
+
 
 ---
 
@@ -313,7 +309,7 @@ python risk-matrix-gen.py --json
 
 **输出摘要**：
 
-```
+
  结论与推荐
 建议：以受限 beta 形式如期上线，而非全面发布或完全推迟。置信度：中
 
@@ -332,7 +328,7 @@ python risk-matrix-gen.py --json
 投票结果：MELCHIOR 赞成 / BALTHASAR 有条件赞成 / CASPER 赞成
 最终建议：受限 beta 上线（限 10 家企业客户），8 周后根据数据决定全面发布
 止损线：若首批客户 NPS < 30 或出现 P0 级故障，立即暂停新客接入
-```
+
 
 ---
 
@@ -395,5 +391,24 @@ MAGI 的设计遵循三个核心原则：
 
 ## License
 
-GNU GPL 3.0 License
+This project is licensed under the [GNU GPL v3 License](LICENSE).
+
+Copyright © 2026 MAGI-Strategic-Advisor Team
+
+### License Choice Rationale
+
+This skill uses **GNU GPL v3** for the following reasons:
+
+1. **Copyleft Protection**: Ensures derivatives remain open-source
+2. **Patent Protection**: Includes explicit patent grant (Section 11)
+3. **Anti-Tivoization**: Prevents hardware restrictions on modified software (Section 6)
+4. **Compatibility**: Compatible with most open-source projects
+5. **Enterprise Use**: Allows modification + redistribution with same license
+
+**Implications**:
+- ✅ Free to use, modify, and distribute
+- ✅ Must open-source derivatives under GPL v3
+- ✅ Must include original copyright + license
+- ⚠️ Cannot proprietary-license derivatives
+
 ```
