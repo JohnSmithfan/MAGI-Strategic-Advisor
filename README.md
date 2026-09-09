@@ -411,4 +411,4 @@ This skill uses **GNU GPL v3** for the following reasons:
 - ✅ Must include original copyright + license
 - ⚠️ Cannot proprietary-license derivatives
 
-```
+---
