@@ -1,6 +1,4 @@
----
 
-```markdown
 ## 使用 AI 复现本项目
 
 本章提供一套完整的分阶段 Prompt 指南，帮助你借助任意主流 AI 助手（如 ChatGPT、Claude、Gemini、千问等）从零复现整个 MAGI Strategic Advisor 技能包。
