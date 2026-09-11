@@ -1,414 +1,117 @@
-# MAGI-Strategic-Advisor
-
----
-
-markdown
 # MAGI Strategic Advisor
 
-> 三重决策人格协同运作的战略参谋系统 —— 让每一个重大决策都经得起三个视角的审视。
+A modular, harness-engineered skill package providing multi-perspective strategic decision analysis powered by the MAGI three-wise-man decision framework.
 
-## 简介
+Inspired by the MAGI supercomputer system from Neon Genesis Evangelion, this project implements three independent decision cores that produce high-quality judgments through voting and deliberation:
 
-**MAGI Strategic Advisor（三贤者·战略参谋）** 是一个基于多角色协同决策机制的 AI Agent 技能包。它的设计灵感源自《新世纪福音战士》中的 MAGI 超级计算机系统 —— 三台独立运作的决策核心，各自代表不同的人格面向，通过投票与博弈产出最终判断。
-
-传统 AI 助手往往从单一视角给出建议，容易陷入"理性盲区"或"过度保守"的陷阱。MAGI 通过引入三个独立人格 —— 理性科学家、审慎守护者、直觉洞察者 —— 确保每个决策都经过**逻辑验证、风险审视和直觉感知**的三重检验。
-
-### 核心理念
-
-- **分歧即价值**：三个人格之间的分歧不是系统的缺陷，而是决策的信息增量
-- **否决即保护**：一票否决机制确保底线不被突破
-- **置信度透明**：每个判断都附带置信度标注，让你知道"哪些结论是铁板钉钉，哪些只是合理推测"
+- **MELCHIOR** -- The rational-scientist persona: data-driven, logic-first analysis
+- **BALTHASAR** -- The prudent-guardian persona: risk-averse, bottom-line-oriented analysis
+- **CASPER** -- The intuitive-observer persona: holistic, pattern-recognition analysis
 
 ---
 
-## 三重人格
+## Features
 
-| 系统代号 | 人格面向 | 思维模式 | 核心问题 | 评估维度 |
-|---------|---------|---------|---------|---------|
-| **MELCHIOR** |  理性科学家 | 第一性原理、数据驱动 | "证据支持什么？" | 收益潜力、数据支撑度、逻辑可行性 |
-| **BALTHASAR** |  审慎守护者 | 底线思维、风险厌恶 | "什么可能伤害我们？" | 风险可控性、伦理合规性、长期安全性 |
-| **CASPER** |  直觉洞察者 | 全局感知、模式识别 | "感觉告诉我们什么？" | 时机匹配度、团队接受度、趋势契合度 |
+- **Multi-perspective analysis**: Every decision is examined through three independent lenses (rational, prudent, intuitive)
+- **Structured decision matrices**: Quantitative scoring with weighted dimensions and veto conditions
+- **Risk assessment**: Six-domain risk scanning with probability-impact matrix and severity classification
+- **Multi-option comparison**: Systematic side-by-side evaluation of competing proposals
+- **Modular architecture**: Each component is independently testable with defined interfaces (harness engineering)
+- **Progressive disclosure**: SKILL.md provides routing; detailed content loads on demand
+- **Dual-mode prompts**: User-facing prompts portable to any AI conversation window
+- **Executable tools**: Python scripts for weighted scoring and risk matrix generation
+- **Open source**: Licensed under GNU GPL V3
 
 ---
 
-## 目录结构
+## Project Structure
 
+```
 magi-advisor/
-├── README.md                           # 本文件
-├── SKILL.md                            # 技能总入口（渐进式披露第一层）
-├── reference/
-│   ├── magi-framework.md               # 三贤者决策框架说明
-│   └── decision-matrix.md              # 决策矩阵模板（单方案/多方案）
-├── prompts/
-│   ├── strategic-analysis.md           # 战略分析提示词
-│   ├── risk-assessment.md              # 风险评估提示词
-│   └── multi-option-compare.md         # 多方案比选提示词
-└── scripts/
-    ├── weighted-scoring.py             # 加权评分计算脚本
-    └── risk-matrix-gen.py              # 风险矩阵生成脚本（终端/HTML）
-    
----
-
-## 快速开始
-
-### 环境要求
-
-- Python 3.7+
-- 无第三方依赖（仅使用标准库）
-
-### 安装
-
-```bash
-# 克隆或复制整个 magi-advisor 目录到你的工作空间
-cp -r magi-advisor/ your-project/skills/
-```
-
-### 验证安装
-
-```bash
-cd magi-advisor/scripts
-
-# 验证加权评分工具
-python weighted-scoring.py
-
-# 验证风险矩阵工具（终端模式）
-python risk-matrix-gen.py
-
-# 生成 HTML 可视化风险矩阵
-python risk-matrix-gen.py --html --output=../output/risk_matrix.html
-```
-
-如果以上命令均正常输出结果，说明安装成功。
-
----
-
-## 三种分析模式
-
-MAGI 根据问题性质自动选择分析模式，也可由用户手动指定。
-
-### 模式一：战略分析
-
-**适用场景**：复杂问题需要结构化拆解，但不涉及多方案比选或重大风险评估。
-
-**工作流程**：
-1. 问题拆解 → 明确目标、约束、已知/未知
-2. 三重人格独立分析 → 各自输出结论与依据
-3. 综合裁决 → 投票汇总，输出最终建议
-
-**输出结构**：
-
- 结论与推荐
- MELCHIOR 判断
- BALTHASAR 判断
- CASPER 判断
- 综合裁决（投票结果 + 前提条件 + 监控指标）
-
-
-### 模式二：风险评估
-
-**适用场景**：涉及重大资源投入、不可逆决策、多方利益冲突或监管敏感性。
-
-**工作流程**：
-1. 六域风险扫描（财务/执行/合规/声誉/时机/人心）
-2. 风险量化（概率 × 影响 → 红/橙/黄/绿四级）
-3. 三重人格独立判断
-4. 综合风险裁决 + 缓解建议 + 止损线
-
-**输出结构**：
-
- 风险总览（整体等级 + 是否触发否决）
- MELCHIOR 风险判断（概率化分析）
- BALTHASAR 风险判断（最坏情景 + 底线评估）
- CASPER 风险判断（隐性因素 + 软性风险）
- 综合裁决（缓解建议表 + 监控指标 + 止损线）
-
-
-### 模式三：多方案比选
-
-**适用场景**：用户提供了两个及以上候选方案，需要在其中做出选择。
-
-**工作流程**：
-1. 方案标准化 → 统一描述框架
-2. 九维评估 → 三重人格独立打分（1-10）
-3. 加权汇总 → 综合排名
-4. 投票裁决 → 分歧分析 + 执行建议
-
-**输出结构**：
-
- 比选结论（推荐方案 + 置信度）
-综合评分排名表
-投票明细表
- 分歧分析 + 关键维度对比
-执行建议（前提条件 + 备选方案 + 监控指标 + 复盘节点）
-
-
----
-
-## 渐进式披露路径
-
-MAGI 采用渐进式技能加载，避免一次性暴露全部内容：
-
-
-用户提问
-  │
-  ├─ 简单战略问题 ──→ SKILL.md ──→ prompts/strategic-analysis.md
-  │
-  ├─ 风险评估需求 ──→ SKILL.md ──→ prompts/risk-assessment.md
-  │                                      └─→ scripts/risk-matrix-gen.py
-  │
-  ├─ 多方案比选 ───→ SKILL.md ──→ prompts/multi-option-compare.md
-  │                                      ├─→ reference/decision-matrix.md
-  │                                      └─→ scripts/weighted-scoring.py
-  │
-  └─ 任何模式 ─────→ reference/magi-framework.md（始终加载）
-
-
----
-
-## 辅助工具
-
-### 加权评分工具
-
-**文件**：`scripts/weighted-scoring.py`
-
-**功能**：对多个方案进行三重视角加权打分，输出排名与判定结果。
-
-**默认权重**：
-
-| 人格 | 权重 |
-|------|------|
-| MELCHIOR | 0.35 |
-| BALTHASAR | 0.35 |
-| CASPER | 0.30 |
-
-**用法**：
-
-```python
-from weighted_scoring import magi_score
-
-options = {
-    "方案A": {
-        "melchior": {"收益潜力": 8, "逻辑可行性": 7, "数据支撑度": 9},
-        "balthasar": {"风险可控性": 6, "伦理合规性": 9, "长期安全性": 7},
-        "casper": {"时机匹配度": 8, "团队接受度": 7, "趋势契合度": 8},
-    },
-    "方案B": {
-        # ...
-    }
-}
-
-results = magi_score(options)
-```
-
-### 风险矩阵生成工具
-
-**文件**：`scripts/risk-matrix-gen.py`
-
-**功能**：生成 5×5 概率-影响风险矩阵，支持终端文本和 HTML 可视化两种输出。
-
-**风险等级划分**：
-
-| 风险值 | 等级 | 颜色 | 行动建议 |
-|--------|------|------|---------|
-| 20-25 | 极高风险 | 🔴 | 立即升级处理，考虑暂停 |
-| 12-19 | 高风险 | 🟠 | 制定专项缓解计划 |
-| 5-11 | 中等风险 | 🟡 | 常规监控，准备应急预案 |
-| 1-4 | 低风险 | 🟢 | 接受风险，定期复查 |
-
-**用法**：
-
-```bash
-# 终端文本输出
-python risk-matrix-gen.py
-
-# 生成 HTML 可视化文件
-python risk-matrix-gen.py --html
-
-# 指定输出路径
-python risk-matrix-gen.py --html --output=my_report.html
-
-# 额外输出 JSON 格式
-python risk-matrix-gen.py --json
+|-- LICENSE                    (GNU GPL V3 license)
+|-- .gitignore                 (Git ignore patterns)
+|-- README.md                  (This file - GitHub front page)
+|-- README FOR AI.md           (AI agent build instructions)
+|-- CHANGELOG.md               (Version history)
+|-- CONTRIBUTING.md            (Contribution guidelines)
+|-- SKILL.md                   (Skill entry index)
+|-- references/
+|   |-- magi-framework.md      (Three-wise-man decision framework)
+|   |-- decision-matrix.md     (Scoring matrix templates)
+|   |-- method-patterns.md     (Code templates and patterns)
+|-- prompts/
+|   |-- 01-implement-method.md (Method implementation prompt)
+|   |-- 02-robustness-checks.md (Robustness validation prompt)
+|-- scripts/
+|   |-- weighted-scoring.py    (Weighted scoring calculator)
+|   |-- risk-matrix-gen.py     (Risk matrix generator)
 ```
 
 ---
 
-## 决策规则
+## Quick Start
 
-### 投票机制
+### For AI Agents
 
-| 投票结果 | 判定 | 行动 |
-|---------|------|------|
-| 3:0 一致赞成 | 高置信度 | 立即执行 |
-| 2:1 多数赞成 | 有条件执行 | 执行，标注保留意见并设监控指标 |
-| 1:1:1 三方分歧 | 信息不足 | 暂停决策，补充信息后重新审议 |
-| 含一票否决 | 强制否决 | 无论其他票数，方案不通过 |
+1. Read `README FOR AI.md` -- this is the authoritative build instruction
+2. Follow the Generation Workflow (Section 8) to generate the complete project
+3. Run validation checks to ensure all constraints are satisfied
 
-### 一票否决清单
+### For Human Users
 
-以下任一条件触发时，无论综合得分多高，方案直接判定为不推荐：
+1. Clone this repository
+2. Explore the `scripts/` directory for executable tools:
+   - `python scripts/weighted-scoring.py` -- Run weighted scoring with sample data
+   - `python scripts/risk-matrix-gen.py` -- Generate risk matrix (terminal output)
+   - `python scripts/risk-matrix-gen.py --html` -- Generate HTML risk matrix visualization
+   - `python scripts/risk-matrix-gen.py --json` -- Output risk data in JSON format
+3. Use the `prompts/` files by copying them into any AI conversation window
 
-- 存在不可逆的法律/合规风险
-- 最坏情况超出组织承受底线
-- 核心假设未经验证且验证成本过高
-- 关键利益相关方明确反对且无法调和
-- 时间窗口已关闭或资源缺口无法弥补
+### For Contributors
 
-### 置信度等级
-
-| 等级 | 定义 | 标注条件 |
-|------|------|---------|
-| 高 | 有直接数据或明确证据 | 存在可引用的数据源、行业基准或历史案例 |
-| 中 | 有间接证据或合理推理链 | 基于类比推理、趋势外推或专家共识 |
-| 低 | 基于直觉或有限信息 | 缺乏直接证据，主要依赖经验判断 |
+1. Read `CONTRIBUTING.md` for contribution guidelines
+2. Follow the coding standards and commit conventions
+3. Submit pull requests after ensuring all constraints are satisfied
 
 ---
 
-## 权重体系
+## Design Principles
 
-默认权重适用于大多数场景。针对不同决策性质，建议按以下方式调整：
+This project adheres to five core design principles:
 
-| 场景类型 | MELCHIOR | BALTHASAR | CASPER |
-|---------|----------|-----------|--------|
-| 默认 | 0.35 | 0.35 | 0.30 |
-| 高风险决策 | 0.25 | **0.50** | 0.25 |
-| 创新驱动 | 0.30 | 0.25 | **0.45** |
-| 数据密集型 | **0.50** | 0.30 | 0.20 |
-| 组织变革 | 0.25 | 0.30 | **0.45** |
+1. **Standardized**: Consistent formatting, naming, and structure across all files
+2. **Generic**: No domain-specific assumptions; parameterized thresholds and weights
+3. **Modular**: Each file has a single responsibility; modules are independently testable
+4. **Compact**: No redundant information; SKILL.md under 120 lines
+5. **Automated**: Scripts include CLI interfaces; validation can be automated
 
 ---
 
-## 适用边界
+## Hard Constraints
 
-###  适用场景
-
-- 战略选择与方向决策
-- 资源分配与优先级排序
-- 风险评估与应急预案
-- 多方案比选与权衡
-- 冲突性目标的调和
-- 重大投资/合作决策
-
-###  不适用场景
-
-- 纯执行类任务（已有明确 SOP 的操作）
-- 简单事实查询
-- 创意发散与头脑风暴
-- 日常运营操作
-- 纯技术实现问题
+The project enforces eight hard constraints (HC-01 through HC-08) covering language requirements (English only), emoji prohibition, SKILL.md size limits, code placement rules, prompt portability, harness engineering, design principles, and license requirements. See `README FOR AI.md` Section 1 for full details.
 
 ---
 
-## 使用示例
+## Licensing
 
-### 示例：产品上线决策
+This project is licensed under the GNU General Public License v3.0. See the `LICENSE` file for the full text.
 
-> **用户问题**：我们的 SaaS 产品计划下个月上线企业版，定价比现有版本高 3 倍。团队内部有分歧，有人建议如期上线，有人认为应该先做三个月 beta 测试。帮我分析一下。
-
-**MAGI 自动选择**：战略分析模式 + 风险评估模式（涉及重大资源投入）
-
-**输出摘要**：
-
-
- 结论与推荐
-建议：以受限 beta 形式如期上线，而非全面发布或完全推迟。置信度：中
-
- MELCHIOR 判断
-企业版市场窗口期约 6-9 个月，推迟 3 个月将损失约 40% 先发优势...
-[置信度：中 — 基于行业平均窗口期推算]
-
- BALTHASAR 判断
-全面上线风险：企业客户流失的声誉损害不可逆，最坏情况下影响现有客户续约...
-未触发否决，但建议设置企业客户数量上限作为风控措施...
-
- CASPER 判断
-团队内部分歧本身就是信号 — 技术团队对稳定性信心不足，但销售团队对客户需求感知强烈...
-
- 综合裁决
-投票结果：MELCHIOR 赞成 / BALTHASAR 有条件赞成 / CASPER 赞成
-最终建议：受限 beta 上线（限 10 家企业客户），8 周后根据数据决定全面发布
-止损线：若首批客户 NPS < 30 或出现 P0 级故障，立即暂停新客接入
-
+By contributing to this project, you agree that your contributions will be licensed under the same terms.
 
 ---
 
-## 扩展指南
+## Disclaimer
 
-### 增加新人格
-
-1. 在 `reference/magi-framework.md` 中定义新人格的思维模式、核心问题和评估维度
-2. 在 `reference/decision-matrix.md` 中添加对应的评估维度和权重
-3. 在 `scripts/weighted-scoring.py` 中添加新人格的权重配置
-4. 在各 `prompts/*.md` 中添加新人格的分析指引
-
-### 接入外部数据
-
-1. 在 `scripts/` 中添加数据获取脚本（如行业基准数据、竞品情报）
-2. 在 `SKILL.md` 中注册新的触发条件和加载路径
-
-### 定制行业模板
-
-在 `reference/` 中添加行业专属权重配置文件，例如：
-
-```
-reference/
-├── weights-fintech.json      # 金融科技行业权重
-├── weights-healthcare.json   # 医疗健康行业权重
-└── weights-ecommerce.json    # 电商行业权重
-```
-
-### 输出格式扩展
-
-在 `scripts/risk-matrix-gen.py` 中增加新的输出模式：
-
-```bash
-python risk-matrix-gen.py --pdf      # PDF 报告
-python risk-matrix-gen.py --markdown # Markdown 文档
-python risk-matrix-gen.py --csv      # CSV 数据导出
-```
+This software is provided "as is", without warranty of any kind, express or implied. The authors and contributors shall not be liable for any claims, damages, or other liability arising from the use of this software. The decision analysis provided by this tool is for informational purposes only and should not be construed as professional advice. Users should consult qualified professionals before making significant business decisions.
 
 ---
 
-## 设计哲学
+## Acknowledgments
 
-MAGI 的设计遵循三个核心原则：
-
-1. **分歧即价值** — 当三个人格意见一致时，你获得了信心；当它们产生分歧时，你获得了信息。两种结果都有价值。
-
-2. **否决即保护** — 一票否决不是阻碍决策的绊脚石，而是防止灾难性错误的最后一道防线。它确保没有任何方案能在忽视致命风险的情况下被通过。
-
-3. **透明即信任** — 置信度标注、分歧记录、假设前提的显式声明，让决策过程完全可追溯。你不是在盲信一个黑箱，而是在审视一个透明的分析过程。
-
----
-
-## 致谢
-
-- 三贤者系统的概念灵感源自 Gainax / Khara《新世纪福音战士》系列中的 MAGI 超级计算机系统
-- 决策矩阵方法论参考了多准则决策分析（MCDA）和风险矩阵（ISO 31010）的经典框架
-- 感谢所有在复杂决策中挣扎过的人 — 这个工具为你们而生
-
----
-
-## License
-
-This project is licensed under the [GNU GPL v3 License](LICENSE).
-
-Copyright © 2026 MAGI-Strategic-Advisor Team
-
-### License Choice Rationale
-
-This skill uses **GNU GPL v3** for the following reasons:
-
-1. **Copyleft Protection**: Ensures derivatives remain open-source
-2. **Patent Protection**: Includes explicit patent grant (Section 11)
-3. **Anti-Tivoization**: Prevents hardware restrictions on modified software (Section 6)
-4. **Compatibility**: Compatible with most open-source projects
-5. **Enterprise Use**: Allows modification + redistribution with same license
-
-**Implications**:
-- ✅ Free to use, modify, and distribute
-- ✅ Must open-source derivatives under GPL v3
-- ✅ Must include original copyright + license
-- ⚠️ Cannot proprietary-license derivatives
+- MAGI supercomputer system concept inspired by *Neon Genesis Evangelion*
+- Harness engineering principles applied throughout the architecture
+- Keep a Changelog format adopted for version history
+- Contributor Covenant Code of Conduct adopted for community standards
 
 ---
