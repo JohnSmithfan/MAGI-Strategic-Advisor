@@ -53,7 +53,7 @@ magi-advisor/
 
 ### For AI Agents
 
-1. Read `README FOR AI.md` -- this is the authoritative build instruction
+1. Read `README FOR AI.md`（README FOR AI.md）-- this is the authoritative build instruction
 2. Follow the Generation Workflow (Section 8) to generate the complete project
 3. Run validation checks to ensure all constraints are satisfied
 
@@ -69,7 +69,7 @@ magi-advisor/
 
 ### For Contributors
 
-1. Read `CONTRIBUTING.md` for contribution guidelines
+1. Read `CONTRIBUTING.md`（CONTRIBUTING.md） for contribution guidelines
 2. Follow the coding standards and commit conventions
 3. Submit pull requests after ensuring all constraints are satisfied
 
@@ -95,7 +95,7 @@ The project enforces eight hard constraints (HC-01 through HC-08) covering langu
 
 ## Licensing
 
-This project is licensed under the GNU General Public License v3.0. See the `LICENSE` file for the full text.
+This project is licensed under the GNU General Public License v3.0. See the `LICENSE`（LICENSE） file for the full text.
 
 By contributing to this project, you agree that your contributions will be licensed under the same terms.
 
