@@ -13,6 +13,7 @@ Exit codes: 0 = success, 1 = input validation error, 2 = runtime error
 Dependencies: Python standard library only
 """
 
+import argparse
 import json
 import sys
 
@@ -105,6 +106,9 @@ def print_results(results: list) -> None:
 
 def main() -> int:
     """Main entry point."""
+    parser = argparse.ArgumentParser(description="Calculate MAGI weighted scores.")
+    parser.add_argument("--json", action="store_true", help="Also print JSON results.")
+    args = parser.parse_args()
     try:
         # Sample data
         sample_options = {
@@ -129,7 +133,7 @@ def main() -> int:
         print_results(results)
 
         # Optional JSON output
-        if "--json" in sys.argv:
+        if args.json:
             print()
             print("--- JSON Output ---")
             print(json.dumps(results, ensure_ascii=False, indent=2))

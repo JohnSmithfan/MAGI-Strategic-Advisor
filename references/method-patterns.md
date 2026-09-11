@@ -53,14 +53,14 @@ A persona judgment represents the analysis output from one of the three personas
 |------|------|----------|---------|-------------|
 | score | int | Yes | — | Risk score (probability x impact, range 1-25) |
 
-**Returns:** dict with keys: level, label, emoji, action
+**Returns:** dict with keys: level, label, action
 
 **Implementation:**
 
 ```python
 RISK_LEVELS = {
     "red":    {"range": (20, 25), "label": "Critical", "action": "Escalate immediately, consider suspending related activities"},
-    "orange": {"range": (12, 19), "label": "High",     "action": "Developspecialized mitigation plan, monitor closely"},
+    "orange": {"range": (12, 19), "label": "High",     "action": "Develop a specialized mitigation plan and monitor closely"},
     "yellow": {"range": (5, 11),  "label": "Medium",   "action": "Routine monitoring, prepare contingency plans"},
     "green":  {"range": (1, 4),   "label": "Low",      "action": "Accept risk, periodic review"},
 }
@@ -268,6 +268,25 @@ python risk-matrix-gen.py [--html] [--output=PATH] [--json]
 | 1 | Input validation error |
 | 2 | Runtime error |
 
+### 3.3 validate-project.py CLI
+
+**Usage:**
+
+```
+python validate-project.py [--root=PATH]
+```
+
+**Purpose:** Validate required files, prompt placeholders, interface contracts,
+line limits, stale paths, and prohibited emoji characters.
+
+**Exit Codes:**
+
+| Code | Meaning |
+|------|---------|
+| 0 | Validation passed |
+| 1 | Contract violations found |
+| 2 | Runtime error |
+
 ## 4. Extension Patterns
 
 ### 4.1 Adding a New Persona
@@ -284,7 +303,8 @@ To add a new persona to the MAGI framework:
 
 To add a new risk domain:
 
-1. Define the domain in prompts/risk-assessment.md (or prompts/01-implement-method.md)
+1. Define the domain in references/decision-matrix.md and document the user
+   workflow in prompts/02-robustness-checks.md when a copy-paste prompt is useful
 2. Add the domain to the six-domain risk scanning table
 3. Update risk-matrix-gen.py if domain-specific processing is needed
 4. Update method-patterns.md section 1.1 schema
