@@ -1,26 +1,69 @@
-# 三贤者·战略参谋
+# MAGI Strategic Advisor
 
-## 触发条件
-当用户面临以下场景时激活本技能：
-- 需要在多个方案中做出选择
-- 决策涉及重大资源投入或不可逆后果
-- 问题存在明显的多方利益冲突
-- 用户明确要求多角度分析
+## Trigger Conditions
 
-## 核心能力
-1. **MELCHIOR（理性科学家）**：基于数据、逻辑和第一性原理进行分析
-2. **BALTHASAR（审慎守护者）**：评估风险、伦理影响和长期后果
-3. **CASPER（直觉洞察者）**：捕捉隐性变量、人际动态和时机判断
+| Scenario | Activation Signal | Action |
+|----------|------------------|--------|
+| Multi-option selection | User provides 2+ candidate options | Load prompts/multi-option-compare.md |
+| Major decision | Significant resource investment or irreversible consequences | Load prompts/risk-assessment.md |
+| Risk evaluation | User requests risk assessment or high-risk signals present | Load prompts/risk-assessment.md |
+| Multi-angle analysis | User requests analysis from different perspectives | Load prompts/strategic-analysis.md |
+| Conflict tradeoff | Obvious stakeholder conflicts or goal contradictions | Load prompts/multi-option-compare.md |
 
-## 工作流程
-1. 接收用户问题，确认决策背景与约束条件
-2. 分别从三重人格视角独立分析
-3. 综合三方判断，给出带置信度的推荐
-4. 标注分歧点，说明最终建议的取舍逻辑
+## Capability Index
 
-## 子技能索引
-- 战略分析场景 → 加载 `prompts/strategic-analysis.md`
-- 风险评估场景 → 加载 `prompts/risk-assessment.md`
-- 多方案比选场景 → 加载 `prompts/multi-option-compare.md`
-- 决策框架参考 → 加载 `reference/magi-framework.md`
-- 评分计算工具 → 执行 `scripts/weighted-scoring.py`
+| Capability | Description | Reference File | Prompt File |
+|-----------|-------------|---------------|-------------|
+| Strategic Analysis | Decompose complex problems, build multi-dimensional frameworks | references/magi-framework.md | prompts/01-implement-method.md |
+| Risk Assessment | Six-domain risk scanning with probability-impact matrix | references/decision-matrix.md | prompts/02-robustness-checks.md |
+| Multi-option Comparison | Systematic side-by-side evaluation of competing proposals | references/method-patterns.md | prompts/01-implement-method.md |
+
+## Quick-Reference: Output Format
+
+```
+## Conclusion and Recommendation
+[One-sentence conclusion + recommended option]
+
+## MELCHIOR Judgment
+[Rational analysis content]
+
+## BALTHASAR Judgment
+[Risk assessment content]
+
+## CASPER Judgment
+[Intuitive insight content]
+
+## Comprehensive Verdict
+Vote result: [X:Y:Z]
+Final recommendation: [Specific action]
+Prerequisites: [Under what conditions this recommendation holds]
+Monitoring indicators: [What signals to watch after execution]
+```
+
+## Quick-Reference: Voting Rules
+
+| Vote Pattern | Verdict | Action |
+|-------------|---------|--------|
+| 3:0 unanimous | High confidence | Execute immediately |
+| 2:1 majority | Conditional | Execute with reservations and monitoring indicators |
+| 1:1:1 split | Insufficient information | Suspend decision, gather more information |
+| Veto triggered | Mandatory reject | Reject regardless of other votes |
+
+## Quick-Reference: Veto Conditions
+
+- Irreversible legal or compliance risk exists
+- Worst-case scenario exceeds organizational tolerance threshold
+- Core assumptions unverified and verification cost is prohibitively high
+- Key stakeholders explicitly oppose and positions cannot be reconciled
+- Time window has closed or resource gap cannot be bridged
+
+## File Routing Map
+
+| User Intent | Primary File | Secondary Files |
+|------------|-------------|----------------|
+| Strategic analysis | prompts/01-implement-method.md | references/magi-framework.md |
+| Risk assessment | prompts/02-robustness-checks.md | references/decision-matrix.md, scripts/risk-matrix-gen.py |
+| Multi-option comparison | prompts/01-implement-method.md | references/decision-matrix.md, scripts/weighted-scoring.py |
+| General framework reference | references/magi-framework.md | — |
+| Scoring templates | references/decision-matrix.md | — |
+| Code patterns | references/method-patterns.md | scripts/*.py |
