@@ -1,321 +1,428 @@
-
-## 使用 AI 复现本项目
-
-本章提供一套完整的分阶段 Prompt 指南，帮助你借助任意主流 AI 助手（如 ChatGPT、Claude、Gemini、千问等）从零复现整个 MAGI Strategic Advisor 技能包。
+# README FOR AI.md -- MAGI Strategic Advisor
 
 ---
 
-### 总体策略
+## Purpose
 
-复现的核心原则是**渐进式构建、逐层验证**：
-
-1. **先框架后内容**：先让 AI 输出目录结构和入口文件，再逐文件填充
-2. **先提示词后脚本**：提示词定义逻辑，脚本实现逻辑，顺序不可颠倒
-3. **每阶段验证**：每个文件生成后立即审查，确认无误再进入下一阶段
-4. **携带上下文**：每次新对话都附上已完成文件的摘要，确保 AI 保持一致性
+This document is the single authoritative build instruction for any AI agent tasked with generating, maintaining, or extending the MAGI Strategic Advisor skill package. Every file in the project must be produced in strict accordance with the rules defined here. No deviation is permitted without explicit amendment to this document.
 
 ---
 
-### 阶段一：项目初始化与框架定义
+## 1. Hard Constraints
 
-**目标**：生成目录结构、`SKILL.md` 入口文件、`magi-framework.md` 参考框架。
+The following constraints are non-negotiable. Every generated file must pass all of them before being considered complete.
 
-**Prompt**：
-
-```
-我要创建一个名为"MAGI Strategic Advisor（三贤者·战略参谋）"的 AI Agent 技能包。
-
-核心概念：
-- 灵感来自《新世纪福音战士》中的 MAGI 超级计算机系统
-- 包含三个独立决策人格：MELCHIOR（理性科学家）、BALTHASAR（审慎守护者）、CASPER（直觉洞察者）
-- 三个人格分别从数据逻辑、风险底线、直觉感知三个维度独立分析问题
-- 通过投票机制产出综合决策，支持一票否决
-
-请帮我完成以下工作：
-
-1. 设计完整的目录结构（包含 SKILL.md、reference/、prompts/、scripts/ 四个层级）
-2. 编写 SKILL.md 作为技能总入口，包含：
-   - 技能介绍与核心能力
-   - 触发条件（什么时候激活）
-   - 工作流程（问题分类 → 加载对应提示词 → 执行分析 → 输出结果）
-   - 辅助工具索引
-   - 决策规则（投票机制、一票否决）
-   - 风格规范
-3. 编写 reference/magi-framework.md，包含：
-   - 三个人格的详细定义（思维模式、核心问题、擅长领域、盲区、评估维度）
-   - 投票机制与置信度等级
-   - 适用边界（适用/不适用场景）
-   - 默认权重与场景化调整方案
-
-风格要求：冷静、精确、结构化，适合作为 AI Agent 的系统级参考文档。
-```
-
-**验证清单**：
-- [ ] 目录结构包含 7 个文件，分布在 4 个目录层级
-- [ ] SKILL.md 中明确列出三种分析模式的触发条件
-- [ ] magi-framework.md 中三个人格各有 5 个维度的完整定义
-- [ ] 权重体系包含默认值和至少 4 种场景化调整方案
+| ID | Constraint | Enforcement |
+|----|-----------|-------------|
+| HC-01 | All compiled content (SKILL.md, references/, scripts/, prompts/) must be written entirely in English | Reject any file containing non-English prose in compiled sections |
+| HC-02 | No emoji characters are permitted in any compiled file | Scan all output files for Unicode emoji ranges and reject on match |
+| HC-03 | SKILL.md must contain only index entries and quick-reference tables | Reject if SKILL.md exceeds 120 lines or contains inline code blocks longer than 3 lines |
+| HC-04 | All code templates, patterns, and implementation details must reside in references/method-patterns.md | Reject if code blocks appear in SKILL.md or README FOR AI.md (EXEMPTION: README FOR AI.md is exempt as a meta-document that must include code examples to specify expected file formats and structures; this exemption applies only to specification/example code blocks, not to reusable code templates) |
+| HC-05 | Files in prompts/ are user-facing copy-paste artifacts, not agent-auto-invoked skills | prompts/ files must be self-contained and portable to any AI chat window |
+| HC-06 | The project must follow harness engineering principles | Every module must be independently testable with defined inputs and outputs |
+| HC-07 | The project must satisfy five design principles: standardized, generic, modular, compact, automated | See Section 6 for detailed compliance checklist |
 
 ---
 
-### 阶段二：决策矩阵模板
+## 2. File Tree
 
-**目标**：生成 `reference/decision-matrix.md`。
-
-**前置上下文**（每次新对话时附上）：
+The project must produce exactly the following structure. No additional files may be created at the root level. Subdirectories may only contain the files listed below.
 
 ```
-我正在构建 MAGI Strategic Advisor 技能包。已完成：
-- 目录结构：magi-advisor/（含 SKILL.md、reference/、prompts/、scripts/）
-- 三重人格：MELCHIOR（收益潜力/数据支撑度/逻辑可行性）、BALTHASAR（风险可控性/伦理合规性/长期安全性）、CASPER（时机匹配度/团队接受度/趋势契合度）
-- 默认权重：MELCHIOR 0.35 / BALTHASAR 0.35 / CASPER 0.30
-- 评分制：各维度 1-10 分，加权汇总后按阈值判定
+magi-advisor/
+|-- SKILL.md
+|-- README FOR AI.md
+|-- references/
+|   |-- magi-framework.md
+|   |-- decision-matrix.md
+|   |-- method-patterns.md
+|-- prompts/
+|   |-- 01-implement-method.md
+|   |-- 02-robustness-checks.md
+|-- scripts/
+|   |-- weighted-scoring.py
+|   |-- risk-matrix-gen.py
 ```
 
-**Prompt**：
+### 2.1 File Responsibility Matrix
 
-```
-请帮我编写 reference/decision-matrix.md，这是一个决策矩阵模板文件，需要包含：
-
-1. 基础决策矩阵（单方案评估）：
-   - 九维评估表格（三个人格各三个维度，含权重列、得分列、加权得分列、判断来源列）
-   - 判定规则（按综合加权得分分为四档：强烈推荐/有条件推荐/需重新设计/不推荐）
-
-2. 多方案比选矩阵：
-   - 横向对比表格（多个方案并列，每个人格组有小计行）
-   - 比选规则（排名规则、致命短板标记、分差过小的处理、最终推荐的三重条件）
-
-3. 一票否决清单：
-   - 列出 5 项触发即否决的硬性条件
-
-4. 填写规范：
-   - 得分标准、权重调整建议、判断来源标注要求、分歧记录规则
-
-请确保与阶段一中的九维评估体系和权重体系完全一致。
-```
-
-**验证清单**：
-- [ ] 九个评估维度的名称和权重与 magi-framework.md 一致
-- [ ] 权重合计为 1.00
-- [ ] 一票否决清单包含恰好 5 项条件
-- [ ] 多方案比选矩阵支持至少 3 个方案并列对比
+| File | Role | Loaded By | Contains |
+|------|------|-----------|----------|
+| SKILL.md | Entry index and quick-reference | Agent runtime on every invocation | Trigger conditions, capability table, file routing map, output format spec |
+| README FOR AI.md | Build instruction for AI agents | AI agent at project generation time | This document |
+| references/magi-framework.md | Core decision framework definition | Agent when analysis mode is activated | Persona definitions, voting rules, confidence levels, weight system |
+| references/decision-matrix.md | Scoring matrix templates | Agent when quantitative evaluation is needed | Single-option matrix, multi-option matrix, veto checklist, scoring norms |
+| references/method-patterns.md | All code templates and implementation patterns | Agent when generating or modifying scripts | Python function signatures, class definitions, data structures, CLI interfaces |
+| prompts/01-implement-method.md | User-facing prompt for method implementation | Human user (copy-paste into any AI chat) | Self-contained prompt with role, task, constraints, output format |
+| prompts/02-robustness-checks.md | User-facing prompt for robustness validation | Human user (copy-paste into any AI chat) | Self-contained prompt for stress-testing a decision or plan |
+| scripts/weighted-scoring.py | Weighted scoring calculator | Agent or user via Python runtime | magi_score(), print_results(), CLI entry point |
+| scripts/risk-matrix-gen.py | Risk matrix generator | Agent or user via Python runtime | build_risk_entry(), generate_text_matrix(), generate_html_matrix(), CLI entry point |
 
 ---
 
-### 阶段三：三套分析提示词
+## 3. SKILL.md Specification
 
-**目标**：生成 `prompts/` 目录下的三个提示词文件。
+SKILL.md is the first file the agent reads. It must be compact and serve exclusively as a routing index. It must NOT contain implementation details, code templates, or lengthy procedural descriptions.
 
-**前置上下文**：
+### 3.1 Required Sections
 
-```
-我正在构建 MAGI Strategic Advisor 技能包。已完成：
-- 三重人格定义：MELCHIOR（理性科学家）、BALTHASAR（审慎守护者）、CASPER（直觉洞察者）
-- 九维评估体系：每个人格负责三个维度，1-10 分制
-- 决策矩阵模板：含单方案评估和多方案比选两套矩阵
-- 投票机制：3:0 高置信执行 / 2:1 有条件执行 / 1:1:1 暂停补充信息 / 含否决则强制不通过
-```
-
-**Prompt（三个文件分三次生成）**：
-
-#### 3a. 战略分析提示词
+SKILL.md must contain exactly these sections in this order:
 
 ```
-请编写 prompts/strategic-analysis.md，这是"战略分析模式"的提示词模板。
+# MAGI Strategic Advisor
 
-要求：
-- 角色定义：MAGI 战略参谋系统
-- 分析流程分三步：问题拆解 → 三重人格独立分析 → 综合裁决
-- MELCHIOR 输出格式：[结论] + [关键依据] + [置信度]
-- BALTHASAR 输出格式：[风险清单] + [严重程度] + [是否构成否决项]
-- CASPER 输出格式：[直觉判断] + [感知到的隐性因素] + [建议关注点]
-- 最终输出模板包含：结论与推荐、三个人格判断、综合裁决（投票结果+前提条件+监控指标）
-- 注意事项：对模糊问题先给假设再标注、主动识别盲区、超出能力时说明边界
-```
+## Trigger Conditions
+[Table: scenario -> activation signal -> action]
 
-#### 3b. 风险评估提示词
+## Capability Index
+[Table: capability -> description -> reference file -> prompt file]
 
-```
-请编写 prompts/risk-assessment.md，这是"风险评估模式"的提示词模板。
+## Quick-Reference: Output Format
+[Condensed output template, max 15 lines]
 
-要求：
-- 核心理念：不是阻止行动，而是让行动更明智
-- 触发条件：重大资源投入、不可逆决策、多方利益冲突、监管敏感性
-- 分析流程分四阶段：
-  1. 六域风险识别（财务/执行/合规/声誉/时机/人心，每个域标注负责人格）
-  2. 风险量化（概率×影响→红/橙/黄/绿四级，含可检测性和可逆性）
-  3. 三重人格独立判断（MELCHIOR概率视角/BALTHASAR底线视角/CASPER隐性因素视角）
-  4. 综合风险裁决（含缓解建议表、监控指标、止损线）
-- 特别强调：也要评估"不做的风险"
-```
+## Quick-Reference: Voting Rules
+[Table: vote pattern -> verdict -> action]
 
-#### 3c. 多方案比选提示词
+## Quick-Reference: Veto Conditions
+[Bulleted list, one line per condition]
+
+## File Routing Map
+[Table: user intent -> primary file to load -> secondary files if needed]
 
 ```
-请编写 prompts/multi-option-compare.md，这是"多方案比选模式"的提示词模板。
 
-要求：
-- 分析流程分四步：方案标准化 → 评估维度定义 → 三重人格独立打分 → 综合比选与裁决
-- 方案标准化框架：名称/核心策略/关键假设/资源需求/预期收益/时间框架
-- 九维评估体系与决策矩阵对齐
-- 综合比选输出包含：比选结论、评分排名表、投票明细表、分歧分析、关键维度对比、执行建议
-- 三种特殊处理规则：
-  1. 所有方案 < 6.0 → 建议暂停决策
-  2. 两方案分差 < 0.5 → 标记实质等价，建议试点
-  3. 触发一票否决 → 直接排除，重新排名
-```
+### 3.2 Size Constraint
 
-**验证清单**：
-- [ ] 三份提示词中的维度名称、权重、评分标准完全一致
-- [ ] 每份提示词都有明确的输出格式模板
-- [ ] 三份提示词之间的术语统一（如"置信度"的三级定义一致）
-- [ ] 风险评估提示词包含"不做的风险"评估要求
+SKILL.md must not exceed 120 lines. If content grows beyond this limit, extract the overflow into the appropriate reference file and replace with a one-line pointer.
 
 ---
 
-### 阶段四：Python 工具脚本
+## 4. references/method-patterns.md Specification
 
-**目标**：生成 `scripts/` 目录下的两个 Python 脚本。
+This file is the single repository for all code templates, data structures, and implementation patterns used across the project. No other file may contain inline code blocks exceeding 3 lines.
 
-**前置上下文**：
+### 4.1 Required Sections
 
-```
-我正在构建 MAGI Strategic Advisor 技能包。需要编写两个 Python 工具脚本：
-
-1. weighted-scoring.py — 加权评分工具
-   - 输入：方案数据字典（每个方案含三个人格各三个维度的 1-10 评分）
-   - 默认权重：melchior 0.35 / balthasar 0.35 / casper 0.30
-   - 输出：按综合加权总分降序排列的结果列表
-   - 判定阈值：≥7.5 推荐 / ≥6.0 有条件推荐 / <6.0 不推荐
-   - 附带分差分析（第一名与第二名分差 < 0.5 时标记"实质等价"）
-
-2. risk-matrix-gen.py — 风险矩阵生成工具
-   - 基于 5×5 概率-影响矩阵（概率 1-5，影响 1-5，风险值 1-25）
-   - 四级风险：20-25 极高(红) / 12-19 高(橙) / 5-11 中(黄) / 1-4 低(绿)
-   - 支持两种输出：终端文本矩阵（默认）和 HTML 可视化（--html 参数）
-   - 支持 --json 参数额外输出 JSON 格式
-   - 支持 --output= 参数指定输出路径
-   - 含否决预警：存在极高风险时提示暂停决策
-```
-
-**Prompt**：
+The following shows the required heading structure for method-patterns.md. Heading markers (## / ###) are template placeholders indicating hierarchy levels, not actual document headings.
 
 ```
-请帮我编写两个 Python 脚本，要求仅使用标准库，不依赖第三方包，兼容 Python 3.7+。
+# Method Patterns
 
-脚本一：scripts/weighted-scoring.py
-- 核心函数 magi_score(options, weights=None)，接收方案数据字典，返回排序后的评分结果
-- 结果包含：name、total（综合分）、breakdown（各人格明细）、verdict（判定）
-- 提供 print_results() 格式化输出函数
-- __main__ 中包含三个示例方案的完整演示数据
-- 支持 --json 参数输出 JSON 格式
+## 1. Data Structures
+### 1.1 Risk Entry Schema
+### 1.2 Option Score Schema
+### 1.3 Persona Judgment Schema
 
-脚本二：scripts/risk-matrix-gen.py
-- 核心函数：
-  - classify_risk(score) → 返回风险等级信息
-  - build_risk_entry(...) → 构建单条风险记录
-  - generate_text_matrix(risks) → 生成终端文本矩阵
-  - generate_html_matrix(risks, output_path) → 生成 HTML 可视化文件
-- HTML 输出使用深色主题（#1a1a2e 背景），包含 5×5 矩阵表格、统计摘要、风险卡片列表
-- __main__ 中包含 5 条示例风险数据
-- 支持 --html、--json、--output= 命令行参数
+## 2. Core Functions
+### 2.1 classify_risk(score: int) -> dict
+### 2.2 build_risk_entry(...) -> dict
+### 2.3 magi_score(options: dict, weights: dict) -> list
+### 2.4 generate_text_matrix(risks: list) -> str
+### 2.5 generate_html_matrix(risks: list, output_path: str) -> str
 
-两个脚本都需要有完整的 docstring 和类型标注。
+## 3. CLI Interfaces
+### 3.1 weighted-scoring.py CLI
+### 3.2 risk-matrix-gen.py CLI
+
+## 4. Extension Patterns
+### 4.1 Adding a New Persona
+### 4.2 Adding a New Risk Domain
+### 4.3 Adding a New Output Format
+
 ```
 
-**验证清单**：
-- [ ] `python weighted-scoring.py` 正常运行，输出三个方案的评分排名
-- [ ] `python risk-matrix-gen.py` 正常运行，输出终端文本矩阵
-- [ ] `python risk-matrix-gen.py --html` 生成可打开的 HTML 文件
-- [ ] 两个脚本均无第三方依赖，`pip list` 中无需额外安装包
-- [ ] 风险矩阵中红色区域（概率5×影响5=25）正确显示为极高风险
+### 4.2 Code Template Format
+
+Every code template in method-patterns.md must follow this structure:
+
+~~~
+### [Function/Class Name]
+
+**Signature:** `[exact function signature]`
+
+**Parameters:**
+
+| Name | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+
+**Returns:** `[return type and description]`
+
+**Implementation:**
+
+```python
+[complete, runnable code block]
+```
+
+**Usage Example:**
+
+```python
+[2-5 lines demonstrating typical invocation]
+```
+
+~~~
 
 ---
 
-### 阶段五：README 文档
+## 5. prompts/ Dual-Mode Specification
 
-**目标**：生成项目 README.md。
+Files in prompts/ operate in a fundamentally different mode from all other project files. They are NOT invoked by the agent runtime. They are standalone artifacts designed for human users to copy and paste into any AI conversation window.
 
-**Prompt**：
+### 5.1 Design Principles for prompts/ Files
+
+| Principle | Requirement |
+|-----------|-------------|
+| Self-contained | Each file must function independently without referencing any other project file |
+| Portable | Must work when pasted into ChatGPT, Claude, Gemini, or any LLM interface |
+| Zero-dependency | Must not assume the target AI has access to references/, scripts/, or SKILL.md |
+| Numbered prefix | Files use numeric prefix (01-, 02-, ...) to indicate suggested usage order |
+| Plain markdown | Must use only standard markdown; no custom directives or agent-specific syntax |
+
+### 5.2 Required Structure for Each Prompt File
 
 ```
-请为 MAGI Strategic Advisor 项目编写一份完整的 README.md，包含以下章节：
+# [Title]
 
-1. 简介 — 项目定位、核心理念（分歧即价值/否决即保护/置信度透明）
-2. 三重人格 — 表格展示三个人格的代号、面向、思维模式、核心问题、评估维度
-3. 目录结构 — 完整的文件树
-4. 快速开始 — 环境要求、安装步骤、验证命令
-5. 三种分析模式 — 战略分析/风险评估/多方案比选的适用场景、工作流程、输出结构
-6. 渐进式披露路径 — 用流程图展示不同问题类型加载哪些文件
-7. 辅助工具 — 两个 Python 脚本的功能、默认参数、用法示例
-8. 决策规则 — 投票机制、一票否决清单、置信度等级
-9. 权重体系 — 默认权重与场景化调整方案
-10. 适用边界 — 适用/不适用场景
-11. 使用示例 — 一个完整的产品上线决策示例
-12. 使用 AI 复现本项目 — 分阶段 Prompt 指南（即本章内容）
-13. 扩展指南 — 如何增加人格、接入数据、定制行业模板
-14. 设计哲学 — 三个核心原则
-15. 致谢与 License
+## Context
+[2-3 sentences explaining what this prompt does and when to use it]
 
-风格：专业、清晰、结构化，适当使用表格和代码块增强可读性。
+## Instructions
+[The actual prompt content the user copies]
+
+## Expected Output
+[Description of what the AI should produce]
+
+## Customization Notes
+[Variables the user should replace before pasting, marked with {{placeholder}} syntax]
+
+```
+
+### 5.3 Prompt File Definitions
+
+#### 01-implement-method.md
+
+Purpose: A prompt that instructs an AI to implement a specific decision analysis method (e.g., weighted scoring, risk matrix, multi-criteria evaluation) from scratch, given a scenario description.
+
+Required placeholders:
+- `{{SCENARIO}}` -- the decision scenario to analyze
+- `{{METHOD}}` -- the analysis method to apply
+- `{{CONSTRAINTS}}` -- any hard constraints or boundaries
+
+#### 02-robustness-checks.md
+
+Purpose: A prompt that instructs an AI to stress-test an existing decision, plan, or analysis by applying adversarial perspectives, edge cases, and failure mode analysis.
+
+Required placeholders:
+- `{{DECISION}}` -- the decision or plan to stress-test
+- `{{CONTEXT}}` -- background information and constraints
+- `{{FOCUS_AREAS}}` -- specific dimensions to probe (optional)
+
+---
+
+## 6. Five Design Principles Compliance
+
+Every file and module in this project must satisfy all five principles. The following checklist must pass for each principle.
+
+### 6.1 Standardized
+
+- [ ] All files use consistent heading hierarchy (H1 for title, H2 for sections, H3 for subsections)
+- [ ] All tables use the same column alignment convention
+- [ ] All code follows PEP 8 (Python) with 4-space indentation
+- [ ] All identifiers use snake_case (variables, functions, files)
+- [ ] All status labels use text only: PASS / FAIL / PENDING / N/A
+
+### 6.2 Generic
+
+- [ ] No domain-specific jargon without definition in magi-framework.md
+- [ ] No hardcoded values in scripts; all thresholds and weights are parameterized
+- [ ] No assumptions about the user's industry, organization size, or technical stack
+- [ ] Prompt files use placeholder syntax instead of concrete examples
+
+### 6.3 Modular
+
+- [ ] Each file has a single, clearly defined responsibility
+- [ ] Scripts can be imported as modules or run standalone
+- [ ] Reference files can be loaded independently without cross-dependencies
+- [ ] Adding or removing a module does not break other modules
+
+### 6.4 Compact
+
+- [ ] SKILL.md does not exceed 120 lines
+- [ ] No file contains redundant information that exists in another file
+- [ ] Code templates include only the essential implementation, not verbose comments
+- [ ] Tables are used instead of prose wherever structured data is presented
+
+### 6.5 Automated
+
+- [ ] Scripts include CLI entry points with argparse for command-line execution
+- [ ] Scripts include `if __name__ == "__main__"` blocks with sample data
+- [ ] Risk matrix generator supports --html and --json output flags
+- [ ] Weighted scoring script supports --json output flag
+- [ ] All scripts exit with code 0 on success and non-zero on error
+
+---
+
+## 7. Harness Engineering Compliance
+
+This project follows harness engineering principles, meaning every component is designed as a testable unit with defined interfaces, deterministic behavior, and clear pass/fail criteria.
+
+### 7.1 Interface Contracts
+
+Each script must define its interface contract at the top of the file in this format:
+
+```python
+"""
+INTERFACE CONTRACT
+==================
+Input:  [exact input format and type]
+Output: [exact output format and type]
+Side effects: [none | file write to X | stdout only]
+Exit codes: 0 = success, 1 = input validation error, 2 = runtime error
+Dependencies: [stdlib only | list external packages]
+"""
+
+```
+
+### 7.2 Deterministic Behavior
+
+- Given identical input, scripts must produce identical output
+- No use of random seeds, timestamps, or environment variables in core logic
+- HTML output must use fixed styles, not dynamic theming
+
+### 7.3 Testability
+
+Each function in method-patterns.md must be verifiable with a minimal test case:
+
+```python
+# Minimal verification (not a full test suite)
+assert classify_risk(25)["level"] == "red"
+assert classify_risk(1)["level"] == "green"
+assert magi_score(sample)["total"] > 0
+
 ```
 
 ---
 
-### 阶段六：集成验证
+## 8. Generation Workflow
 
-**目标**：确认所有文件协同工作，整体一致。
+When an AI agent is tasked with generating this project, it must follow this exact sequence:
 
-**Prompt**：
+### Step 1: Scaffold
+
+Create the directory structure exactly as specified in Section 2. Do not add, remove, or rename any file.
+
+### Step 2: Generate references/ First
+
+Generate files in this order:
+1. references/magi-framework.md
+2. references/decision-matrix.md
+3. references/method-patterns.md
+
+Rationale: These files define the vocabulary, data structures, and logic that all other files depend on.
+
+### Step 3: Generate scripts/
+
+Generate files in this order:
+1. scripts/weighted-scoring.py
+2. scripts/risk-matrix-gen.py
+
+Each script must:
+- Import only from Python standard library
+- Include the INTERFACE CONTRACT docstring
+- Include the `if __name__ == "__main__"` block with sample data
+- Pass all assertions defined in Section 7.3
+
+### Step 4: Generate prompts/
+
+Generate files in this order:
+1. prompts/01-implement-method.md
+2. prompts/02-robustness-checks.md
+
+Each file must be self-contained and pass the portability test described in Section 5.1.
+
+### Step 5: Generate SKILL.md Last
+
+SKILL.md is generated last because it is purely an index that references all other files. It must be verified against the 120-line limit.
+
+### Step 6: Validation
+
+Run the following checks on the complete project:
 
 ```
-我已经完成了 MAGI Strategic Advisor 技能包的所有文件。请帮我做一轮集成审查：
+VALIDATION CHECKLIST
+====================
+[ ] HC-01: All files are in English
+[ ] HC-02: No emoji in any file
+[ ] HC-03: SKILL.md is under 120 lines and contains no code blocks > 3 lines
+[ ] HC-04: No code templates outside references/method-patterns.md
+[ ] HC-05: prompts/ files are self-contained and portable
+[ ] HC-06: All scripts have INTERFACE CONTRACT and pass minimal assertions
+[ ] HC-07: All five design principles pass (Section 6)
+[ ] File count: exactly 8 files (excluding this README)
+[ ] Directory count: exactly 3 subdirectories (references/, prompts/, scripts/)
 
-文件清单：
-- SKILL.md
-- reference/magi-framework.md
-- reference/decision-matrix.md
-- prompts/strategic-analysis.md
-- prompts/risk-assessment.md
-- prompts/multi-option-compare.md
-- scripts/weighted-scoring.py
-- scripts/risk-matrix-gen.py
-- README.md
-
-请检查以下一致性：
-1. 三个人格的名称、评估维度在所有文件中是否完全一致
-2. 权重体系（默认 0.35/0.35/0.30）在所有文件中是否一致
-3. 评分标准（1-10 分制）和判定阈值是否一致
-4. 一票否决条件在所有文件中是否一致
-5. 术语是否统一（如"置信度"的三级定义）
-6. SKILL.md 中引用的文件路径是否与实际目录结构匹配
-7. README 中的示例是否与脚本的实际输出格式匹配
-
-请逐项列出检查结果，标注 通过 或 不一致（附具体问题）。
 ```
+
+For programmatic verification, create a `validate_project.py` script in the project root that checks all HC constraints automatically. The script should:
+
+1. Parse each file and scan for Unicode emoji ranges (reject on match for HC-02)
+2. Count lines in SKILL.md and verify <= 120 (HC-03)
+3. Scan for code blocks in SKILL.md and README FOR AI.md outside exempted sections (HC-04)
+4. Verify prompts/ files are self-contained with no cross-references to other project files (HC-05)
+5. Verify all scripts have INTERFACE CONTRACT docstrings (HC-06)
+6. Count total files (excluding README) and verify == 8
+7. Verify directory structure matches the defined tree exactly
+
+Run this script after Step 6 of the Generation Workflow to automate validation.
 
 ---
 
-### 常见问题与应对
+## 9. Extension Protocol
 
-| 问题 | 原因 | 解决方案 |
-|------|------|---------|
-| AI 生成的维度名称前后不一致 | 上下文窗口过长导致遗忘 | 每次新对话都附上"前置上下文"摘要 |
-| 脚本运行报错 | AI 可能使用了 f-string  walrus operator 等 3.8+ 语法 | 明确要求"兼容 Python 3.7" |
-| 提示词过于笼统 | AI 倾向于输出通用模板 | 在 Prompt 中给出具体的输出格式示例 |
-| 权重加起来不等于 1.0 | 浮点精度或 AI 计算错误 | 验证时手动加总确认 |
-| HTML 输出样式异常 | AI 可能遗漏 CSS 或写错选择器 | 在浏览器中打开检查，要求修复 |
-| 不同对话中生成的文件风格不统一 | 每次对话的"温度"和上下文不同 | 统一指定风格要求："冷静、精确、结构化" |
+When extending this project with new capabilities, follow these rules:
+
+| Action | Rule |
+|--------|------|
+| Add a new analysis mode | Create a new file in prompts/ with the next numeric prefix (03-, 04-, ...) |
+| Add a new script | Place in scripts/, add interface contract, add entry to method-patterns.md |
+| Add a new reference | Place in references/, add routing entry to SKILL.md File Routing Map |
+| Add a new persona | Extend magi-framework.md, update decision-matrix.md dimensions, update method-patterns.md schemas |
+| Modify existing files | Update the file, then verify SKILL.md index entries still point to correct locations |
+
+---
+
+## 10. Anti-Patterns
+
+The following practices are explicitly forbidden:
+
+| Anti-Pattern | Why It Is Forbidden | Correct Alternative |
+|-------------|---------------------|---------------------|
+| Embedding code in SKILL.md | Violates HC-03 and HC-04 | Reference method-patterns.md by section number |
+| Using emoji as status markers | Violates HC-02 | Use text labels: PASS, FAIL, HIGH, LOW |
+| Hardcoding weights in scripts | Violates generic principle | Accept weights as function parameters with defaults |
+| Cross-referencing prompts/ from agent files | Violates dual-mode separation | prompts/ files are human-only artifacts |
+| Writing procedural narratives in SKILL.md | Violates compact principle | Use tables and one-line pointers |
+| Adding comments in non-English | Violates HC-01 | All comments, docstrings, and labels in English |
+| Creating files outside the defined tree | Violates modular principle | Use extension protocol in Section 9 |
 
 ---
 
-### 效率建议
+## 11. Glossary
 
-- **单次对话完成一个阶段**：不要在一个对话中要求生成所有文件，上下文过长会导致质量下降
-- **善用"前置上下文"**：每次新对话开头附上已完成文件的摘要，而非全文
-- **先审后改**：每个文件生成后先人工审查，发现问题立即在同一对话中修正，不要留到下一阶段
-- **脚本优先跑通**：Python 脚本生成后立即运行验证，比提示词文件更容易发现逻辑错误
-- **版本标记**：每完成一个阶段，在文件头部添加注释标记版本和日期，便于追溯
-```
+| Term | Definition |
+|------|-----------|
+| MAGI | Multi-perspective Analysis and Governance Interface; the project name inspired by the MAGI supercomputer system |
+| MELCHIOR | The rational-scientist persona; data-driven, logic-first analysis |
+| BALTHASAR | The prudent-guardian persona; risk-averse, bottom-line-oriented analysis |
+| CASPER | The intuitive-observer persona; holistic, pattern-recognition analysis |
+| Harness engineering | An approach where every component is a testable unit with defined inputs, outputs, and pass/fail criteria |
+| Dual-mode | The separation between agent-invoked files (SKILL.md, references/, scripts/) and human-facing files (prompts/) |
+| Progressive disclosure | The pattern where SKILL.md provides only routing; detailed content is loaded on demand from reference files |
+| Veto condition | A hard constraint that, when triggered, overrides all scoring and rejects a proposal regardless of aggregate score |
 
 ---
+
+## 12. Version and Change Log
+
+| Version | Date | Change |
+|---------|------|--------|
+| 1.0.0 | 2026-09-11 | Initial release. Full project specification with 8 deliverable files across 3 module directories (excluding this README). |
