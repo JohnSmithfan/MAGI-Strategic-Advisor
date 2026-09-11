@@ -1,0 +1,90 @@
+# magi-advisor .gitignore
+# Git ignore patterns for the MAGI Strategic Advisor project
+
+# ============================================
+# Python bytecode and build artifacts
+# ============================================
+__pycache__/
+*.py[cod]
+*.class
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+*.whl
+
+# ============================================
+# Virtual environments
+# ============================================
+.venv/
+venv/
+ENV/
+env/
+.conda/
+.pyenv/
+
+# ============================================
+# IDE and editor files
+# ============================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ============================================
+# Jupyter Notebook
+# ============================================
+.ipynb_checkpoints/
+*.ipynb
+
+# ============================================
+# Test and coverage artifacts
+# ============================================
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+noxfile.py
+
+# ============================================
+# Project-specific generated files
+# ============================================
+# Risk matrix HTML output (generated at runtime)
+risk_matrix.html
+*.html
+
+# Generated data files
+data/
+*.db
+*.sqlite
+*.sqlite3
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# ============================================
+# Git
+# ============================================
+.gitignore
+.gitkeep
+
+# ============================================
+# Documentation build (if ever needed)
+# ============================================
+docs/_build/
+*.pdf
+*.docx
+
+# ============================================
+# Environment and configuration (keep templates)
+# ============================================
+.env
+.env.local
+.env.*.local
+!.env.example
