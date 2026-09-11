@@ -34,6 +34,9 @@ magi-advisor/
 |-- README FOR AI.md           (AI agent build instructions)
 |-- CHANGELOG.md               (Version history)
 |-- CONTRIBUTING.md            (Contribution guidelines)
+|-- CODE_OF_CONDUCT.md        (Community standards)
+|-- SECURITY.md               (Security policy)
+|-- .editorconfig             (Editor defaults)
 |-- SKILL.md                   (Skill entry index)
 |-- references/
 |   |-- magi-framework.md      (Three-wise-man decision framework)
@@ -45,6 +48,7 @@ magi-advisor/
 |-- scripts/
 |   |-- weighted-scoring.py    (Weighted scoring calculator)
 |   |-- risk-matrix-gen.py     (Risk matrix generator)
+|   |-- validate-project.py    (Repository contract validator)
 ```
 
 ---
@@ -89,7 +93,9 @@ This project adheres to five core design principles:
 
 ## Hard Constraints
 
-The project enforces eight hard constraints (HC-01 through HC-08) covering language requirements (English only), emoji prohibition, SKILL.md size limits, code placement rules, prompt portability, harness engineering, design principles, and license requirements. See `README FOR AI.md` Section 1 for full details.
+The project enforces language, no-emoji, compact-index, code-placement,
+prompt-portability, harness-engineering, design, and licensing requirements.
+See `README FOR AI.md` for the authoritative contract and audit record.
 
 ---
 

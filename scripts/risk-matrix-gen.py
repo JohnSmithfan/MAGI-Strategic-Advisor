@@ -13,6 +13,7 @@ Exit codes: 0 = success, 1 = input validation error, 2 = runtime error
 Dependencies: Python standard library only
 """
 
+import argparse
 import json
 import sys
 
@@ -246,6 +247,11 @@ def generate_html_matrix(risks: list, output_path: str = "risk_matrix.html") -> 
 
 def main() -> int:
     """Main entry point."""
+    parser = argparse.ArgumentParser(description="Generate a MAGI risk matrix.")
+    parser.add_argument("--html", action="store_true", help="Write an HTML risk matrix.")
+    parser.add_argument("--output", default="risk_matrix.html", help="HTML output path.")
+    parser.add_argument("--json", action="store_true", help="Also print JSON risk data.")
+    args = parser.parse_args()
     try:
         # Sample risk data
         sample_risks = [
@@ -297,18 +303,14 @@ def main() -> int:
         ]
 
         # Determine output mode
-        if "--html" in sys.argv:
-            output_path = "risk_matrix.html"
-            for arg in sys.argv:
-                if arg.startswith("--output="):
-                    output_path = arg.split("=", 1)[1]
-            result = generate_html_matrix(sample_risks, output_path)
+        if args.html:
+            result = generate_html_matrix(sample_risks, args.output)
             print(f"HTML risk matrix generated: {result}")
         else:
             print(generate_text_matrix(sample_risks))
 
         # Optional JSON output
-        if "--json" in sys.argv:
+        if args.json:
             print()
             print("--- JSON Output ---")
             print(json.dumps(sample_risks, ensure_ascii=False, indent=2))

@@ -4,19 +4,19 @@
 
 | Scenario | Activation Signal | Action |
 |----------|------------------|--------|
-| Multi-option selection | User provides 2+ candidate options | Load prompts/multi-option-compare.md |
-| Major decision | Significant resource investment or irreversible consequences | Load prompts/risk-assessment.md |
-| Risk evaluation | User requests risk assessment or high-risk signals present | Load prompts/risk-assessment.md |
-| Multi-angle analysis | User requests analysis from different perspectives | Load prompts/strategic-analysis.md |
-| Conflict tradeoff | Obvious stakeholder conflicts or goal contradictions | Load prompts/multi-option-compare.md |
+| Multi-option selection | User provides 2+ candidate options | Load references/decision-matrix.md |
+| Major decision | Significant resource investment or irreversible consequences | Load references/magi-framework.md |
+| Risk evaluation | User requests risk assessment or high-risk signals present | Load references/decision-matrix.md |
+| Multi-angle analysis | User requests analysis from different perspectives | Load references/magi-framework.md |
+| Conflict tradeoff | Obvious stakeholder conflicts or goal contradictions | Load references/decision-matrix.md |
 
 ## Capability Index
 
-| Capability | Description | Reference File | Prompt File |
-|-----------|-------------|---------------|-------------|
-| Strategic Analysis | Decompose complex problems, build multi-dimensional frameworks | references/magi-framework.md | prompts/01-implement-method.md |
-| Risk Assessment | Six-domain risk scanning with probability-impact matrix | references/decision-matrix.md | prompts/02-robustness-checks.md |
-| Multi-option Comparison | Systematic side-by-side evaluation of competing proposals | references/method-patterns.md | prompts/01-implement-method.md |
+| Capability | Description | Reference File | Optional User Prompt |
+|-----------|-------------|---------------|----------------------|
+| Strategic Analysis | Decompose complex problems, build multi-dimensional frameworks | references/magi-framework.md | User may copy prompts/01-implement-method.md |
+| Risk Assessment | Six-domain risk scanning with probability-impact matrix | references/decision-matrix.md | User may copy prompts/02-robustness-checks.md |
+| Multi-option Comparison | Systematic side-by-side evaluation of competing proposals | references/method-patterns.md | User may copy prompts/01-implement-method.md |
 
 ## Quick-Reference: Output Format
 
@@ -61,9 +61,9 @@ Monitoring indicators: [What signals to watch after execution]
 
 | User Intent | Primary File | Secondary Files |
 |------------|-------------|----------------|
-| Strategic analysis | prompts/01-implement-method.md | references/magi-framework.md |
-| Risk assessment | prompts/02-robustness-checks.md | references/decision-matrix.md, scripts/risk-matrix-gen.py |
-| Multi-option comparison | prompts/01-implement-method.md | references/decision-matrix.md, scripts/weighted-scoring.py |
+| Strategic analysis | references/magi-framework.md | references/decision-matrix.md |
+| Risk assessment | references/decision-matrix.md | references/magi-framework.md, scripts/risk-matrix-gen.py |
+| Multi-option comparison | references/decision-matrix.md | references/method-patterns.md, scripts/weighted-scoring.py |
 | General framework reference | references/magi-framework.md | — |
 | Scoring templates | references/decision-matrix.md | — |
 | Code patterns | references/method-patterns.md | scripts/*.py |

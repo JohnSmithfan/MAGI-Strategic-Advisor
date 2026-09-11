@@ -107,6 +107,9 @@ magi-advisor/
 |-- README FOR AI.md
 |-- CHANGELOG.md
 |-- CONTRIBUTING.md
+|-- CODE_OF_CONDUCT.md
+|-- SECURITY.md
+|-- .editorconfig
 |-- SKILL.md
 |-- references/
 |   |-- magi-framework.md
@@ -118,6 +121,7 @@ magi-advisor/
 |-- scripts/
 |   |-- weighted-scoring.py
 |   |-- risk-matrix-gen.py
+|   |-- validate-project.py
 ```
 
 ---
