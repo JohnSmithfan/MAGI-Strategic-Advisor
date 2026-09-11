@@ -1,80 +1,61 @@
 #!/usr/bin/env python3
 """
-MAGI 风险矩阵生成工具
-支持两种输出模式：
-1. 终端文本矩阵（默认）
-2. HTML可视化矩阵（--html 参数）
+MAGI Risk Matrix Generator
+===========================
+Generates 5x5 probability-impact risk matrices in terminal text and HTML formats.
 
-风险等级计算：概率(1-5) × 影响(1-5) = 风险值(1-25)
-- 20-25: 🔴 红色（极高风险）
-- 12-19: 🟠 橙色（高风险）
-- 5-11:  🟡 黄色（中等风险）
-- 1-4:   🟢 绿色（低风险）
+INTERFACE CONTRACT
+==================
+Input:  Command-line arguments (optional --html, --output=PATH, --json flags); sample data is hardcoded
+Output: Risk matrix to stdout (text mode) or HTML file (HTML mode); optional JSON to stdout
+Side effects: File write to output_path when --html is specified
+Exit codes: 0 = success, 1 = input validation error, 2 = runtime error
+Dependencies: Python standard library only
 """
 
 import json
 import sys
-from typing import Optional
 
 
-# ─── 风险等级定义 ───────────────────────────────────────────
-
+# Risk level definitions
 RISK_LEVELS = {
-    "red":    {"range": (20, 25), "label": "极高风险", "emoji": "🔴", "action": "立即升级处理，考虑暂停相关活动"},
-    "orange": {"range": (12, 19), "label": "高风险",   "emoji": "🟠", "action": "制定专项缓解计划，密切监控"},
-    "yellow": {"range": (5, 11),  "label": "中等风险", "emoji": "🟡", "action": "常规监控，准备应急预案"},
-    "green":  {"range": (1, 4),   "label": "低风险",   "emoji": "🟢", "action": "接受风险，定期复查"},
+    "red":    {"range": (20, 25), "label": "Critical", "action": "Escalate immediately, consider suspending related activities"},
+    "orange": {"range": (12, 19), "label": "High",     "action": "Develop specialized mitigation plan, monitor closely"},
+    "yellow": {"range": (5, 11),  "label": "Medium",   "action": "Routine monitoring, prepare contingency plans"},
+    "green":  {"range": (1, 4),   "label": "Low",      "action": "Accept risk, periodic review"},
 }
 
-PROBABILITY_LABELS = {1: "极低", 2: "低", 3: "中", 4: "高", 5: "极高"}
-IMPACT_LABELS = {1: "轻微", 2: "较小", 3: "中等", 4: "严重", 5: "致命"}
+PROBABILITY_LABELS = {1: "Very Low", 2: "Low", 3: "Medium", 4: "High", 5: "Very High"}
+IMPACT_LABELS = {1: "Negligible", 2: "Minor", 3: "Moderate", 4: "Severe", 5: "Catastrophic"}
 
 
 def classify_risk(score: int) -> dict:
-    """根据风险值返回风险等级信息"""
+    """Classify a risk score into severity level."""
     for level, info in RISK_LEVELS.items():
         if info["range"][0] <= score <= info["range"][1]:
             return {"level": level, **info}
-    return {"level": "unknown", "label": "未知", "emoji": "⚪", "action": "需要人工判断"}
+    return {"level": "unknown", "label": "Unknown", "action": "Requires manual assessment"}
 
 
-def build_risk_entry(
-    name: str,
-    probability: int,
-    impact: int,
-    domain: str = "",
-    source: str = "",
-    reversibility: str = "",
-    detectability: str = "",
-    mitigation: str = "",
-) -> dict:
-    """
-    构建单条风险记录。
+def build_risk_entry(name, probability, impact, domain="", source="", reversibility="", detectability="", mitigation=""):
+    """Build a risk entry dictionary."""
+    if not (1 <= probability <= 5):
+        raise ValueError(f"Probability must be 1-5, got {probability}")
+    if not (1 <= impact <= 5):
+        raise ValueError(f"Impact must be 1-5, got {impact}")
 
-    参数:
-        name: 风险名称
-        probability: 发生概率 (1-5)
-        impact: 影响程度 (1-5)
-        domain: 风险域（财务/执行/合规/声誉/时机/人心）
-        source: 判断来源（MELCHIOR/BALTHASAR/CASPER）
-        reversibility: 可逆性（可逆/部分可逆/不可逆）
-        detectability: 可检测性（可提前预警/事后才发现/无法检测）
-        mitigation: 缓解措施
-    """
     score = probability * impact
     risk_info = classify_risk(score)
-
     return {
         "name": name,
         "domain": domain,
         "source": source,
         "probability": probability,
-        "probability_label": PROBABILITY_LABELS.get(probability, "未知"),
+        "probability_label": PROBABILITY_LABELS.get(probability, "Unknown"),
         "impact": impact,
-        "impact_label": IMPACT_LABELS.get(impact, "未知"),
+        "impact_label": IMPACT_LABELS.get(impact, "Unknown"),
         "score": score,
         "risk_level": risk_info["level"],
-        "risk_emoji": risk_info["emoji"],
         "risk_label": risk_info["label"],
         "action": risk_info["action"],
         "reversibility": reversibility,
@@ -84,16 +65,16 @@ def build_risk_entry(
 
 
 def generate_text_matrix(risks: list) -> str:
-    """生成终端文本格式的风险矩阵"""
+    """Generate terminal text format risk matrix."""
     lines = []
     lines.append("=" * 70)
-    lines.append("  MAGI 风险矩阵 — 三贤者战略参谋")
+    lines.append("  MAGI Risk Matrix")
     lines.append("=" * 70)
 
-    # 5×5 矩阵网格
+    # 5x5 matrix grid
     lines.append("")
-    lines.append("  影响程度 →")
-    lines.append("  概率 ↓   |  轻微(1)  较小(2)  中等(3)  严重(4)  致命(5)")
+    lines.append("  Impact ->")
+    lines.append("  Prob  |  Negl(1)  Minor(2)  Moderate(3)  Severe(4)  Catast(5)")
     lines.append("  " + "-" * 62)
 
     for p in range(5, 0, -1):
@@ -101,65 +82,56 @@ def generate_text_matrix(risks: list) -> str:
         for i in range(1, 6):
             score = p * i
             info = classify_risk(score)
-            cell = f" {info['emoji']}{score:>2} "
-            row += cell
+            row += f"  {score:>2}({info['level'][:3]})  "
         lines.append(row)
 
     lines.append("  " + "-" * 62)
 
-    # 风险清单
+    # Risk list
     lines.append("")
-    lines.append("  风险清单（按风险值降序）")
+    lines.append("  Risk List (sorted by severity)")
     lines.append("  " + "-" * 62)
 
     sorted_risks = sorted(risks, key=lambda r: r["score"], reverse=True)
     for i, r in enumerate(sorted_risks, 1):
-        lines.append(f"  {i}. {r['risk_emoji']} {r['name']}")
-        lines.append(f"     风险值: {r['score']} ({r['risk_label']})")
-        lines.append(f"     概率: {r['probability_label']}({r['probability']}) × 影响: {r['impact_label']}({r['impact']})")
+        lines.append(f"  {i}. {r['name']}")
+        lines.append(f"     Score: {r['score']} ({r['risk_label']})")
+        lines.append(f"     Probability: {r['probability_label']}({r['probability']}) x Impact: {r['impact_label']}({r['impact']})")
         if r["domain"]:
-            lines.append(f"     风险域: {r['domain']} | 判断来源: {r['source']}")
+            lines.append(f"     Domain: {r['domain']} | Source: {r['source']}")
         if r["reversibility"]:
-            lines.append(f"     可逆性: {r['reversibility']} | 可检测性: {r['detectability']}")
+            lines.append(f"     Reversibility: {r['reversibility']} | Detectability: {r['detectability']}")
         if r["mitigation"]:
-            lines.append(f"     缓解措施: {r['mitigation']}")
-        lines.append(f"     行动建议: {r['action']}")
+            lines.append(f"     Mitigation: {r['mitigation']}")
+        lines.append(f"     Action: {r['action']}")
         lines.append("")
 
-    # 统计摘要
+    # Summary
     level_counts = {"red": 0, "orange": 0, "yellow": 0, "green": 0}
     for r in risks:
         level_counts[r["risk_level"]] = level_counts.get(r["risk_level"], 0) + 1
 
     lines.append("  " + "-" * 62)
-    lines.append("  统计摘要")
-    lines.append(f"  🔴 极高风险: {level_counts['red']} 项")
-    lines.append(f"  🟠 高风险:   {level_counts['orange']} 项")
-    lines.append(f"  🟡 中等风险: {level_counts['yellow']} 项")
-    lines.append(f"  🟢 低风险:   {level_counts['green']} 项")
-    lines.append(f"  总计:        {len(risks)} 项")
+    lines.append("  Summary")
+    lines.append(f"  Critical: {level_counts['red']} items")
+    lines.append(f"  High:     {level_counts['orange']} items")
+    lines.append(f"  Medium:   {level_counts['yellow']} items")
+    lines.append(f"  Low:      {level_counts['green']} items")
+    lines.append(f"  Total:    {len(risks)} items")
 
-    # 否决判定
+    # Veto warning
     red_count = level_counts["red"]
     if red_count > 0:
         lines.append("")
-        lines.append(f"  ⛔ 否决预警: 存在 {red_count} 项极高风险，建议暂停决策直至风险缓解")
+        lines.append(f"  VETO WARNING: {red_count} critical risk(s) found. Recommend suspending decision until risks are mitigated.")
 
     lines.append("=" * 70)
     return "\n".join(lines)
 
 
 def generate_html_matrix(risks: list, output_path: str = "risk_matrix.html") -> str:
-    """生成HTML格式的风险矩阵可视化"""
-
-    COLOR_MAP = {
-        "red": "#e74c3c",
-        "orange": "#e67e22",
-        "yellow": "#f1c40f",
-        "green": "#2ecc71",
-    }
-
-    # 构建5×5网格数据
+    """Generate HTML risk matrix visualization."""
+    # Build 5x5 grid data
     grid = {}
     for r in risks:
         key = (r["probability"], r["impact"])
@@ -167,42 +139,47 @@ def generate_html_matrix(risks: list, output_path: str = "risk_matrix.html") -> 
             grid[key] = []
         grid[key].append(r)
 
-    html = []
-    html.append("""<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<title>MAGI 风险矩阵</title>
-<style>
-  body { font-family: -apple-system, 'Segoe UI', sans-serif; background: #1a1a2e; color: #eee; padding: 40px; }
-  h1 { text-align: center; color: #e94560; }
-  .matrix-container { display: flex; justify-content: center; margin: 30px 0; }
-  table { border-collapse: collapse; }
-  th, td { width: 90px; height: 60px; text-align: center; border: 2px solid #333; font-size: 14px; }
-  th { background: #16213e; color: #e94560; }
-  .axis-label { background: #16213e; color: #0f3460; font-weight: bold; }
-  .cell-red { background: rgba(231,76,60,0.3); }
-  .cell-orange { background: rgba(230,126,34,0.3); }
-  .cell-yellow { background: rgba(241,196,15,0.2); }
-  .cell-green { background: rgba(46,204,113,0.2); }
-  .risk-list { max-width: 800px; margin: 30px auto; }
-  .risk-card { background: #16213e; border-radius: 8px; padding: 16px; margin: 12px 0; border-left: 4px solid #e94560; }
-  .risk-card.orange { border-left-color: #e67e22; }
-  .risk-card.yellow { border-left-color: #f1c40f; }
-  .risk-card.green { border-left-color: #2ecc71; }
-  .risk-card h3 { margin: 0 0 8px 0; }
-  .risk-card .meta { color: #aaa; font-size: 13px; }
-  .summary { text-align: center; margin: 30px 0; font-size: 18px; }
-  .summary span { margin: 0 15px; }
-</style>
-</head>
-<body>
-<h1>🛡️ MAGI 风险矩阵 — 三贤者战略参谋</h1>
-""")
+    color_map = {
+        "red": "#e74c3c",
+        "orange": "#e67e22",
+        "yellow": "#f1c40f",
+        "green": "#2ecc71",
+    }
 
-    # 矩阵表格
+    html = []
+    html.append('<!DOCTYPE html>')
+    html.append('<html lang="en">')
+    html.append('<head>')
+    html.append('<meta charset="UTF-8">')
+    html.append('<title>MAGI Risk Matrix</title>')
+    html.append('<style>')
+    html.append('body { font-family: Arial, sans-serif; background: #1a1a2e; color: #eee; padding: 40px; }')
+    html.append('h1 { text-align: center; color: #e94560; }')
+    html.append('.matrix-container { display: flex; justify-content: center; margin: 30px 0; }')
+    html.append('table { border-collapse: collapse; }')
+    html.append('th, td { width: 100px; height: 60px; text-align: center; border: 2px solid #333; font-size: 14px; }')
+    html.append('th { background: #16213e; color: #e94560; }')
+    html.append('.cell-red { background: rgba(231,76,60,0.3); }')
+    html.append('.cell-orange { background: rgba(230,126,34,0.3); }')
+    html.append('.cell-yellow { background: rgba(241,196,15,0.2); }')
+    html.append('.cell-green { background: rgba(46,204,113,0.2); }')
+    html.append('.risk-list { max-width: 800px; margin: 30px auto; }')
+    html.append('.risk-card { background: #16213e; border-radius: 8px; padding: 16px; margin: 12px 0; border-left: 4px solid #e94560; }')
+    html.append('.risk-card.orange { border-left-color: #e67e22; }')
+    html.append('.risk-card.yellow { border-left-color: #f1c40f; }')
+    html.append('.risk-card.green { border-left-color: #2ecc71; }')
+    html.append('.risk-card h3 { margin: 0 0 8px 0; }')
+    html.append('.risk-card .meta { color: #aaa; font-size: 13px; }')
+    html.append('.summary { text-align: center; margin: 30px 0; font-size: 18px; }')
+    html.append('.summary span { margin: 0 15px; }')
+    html.append('</style>')
+    html.append('</head>')
+    html.append('<body>')
+    html.append('<h1>MAGI Risk Matrix</h1>')
+
+    # Matrix table
     html.append('<div class="matrix-container"><table>')
-    html.append('<tr><th>概率 ↓ / 影响 →</th>')
+    html.append('<tr><th>Prob / Impact</th>')
     for i in range(1, 6):
         html.append(f'<th>{IMPACT_LABELS[i]}({i})</th>')
     html.append('</tr>')
@@ -215,7 +192,7 @@ def generate_html_matrix(risks: list, output_path: str = "risk_matrix.html") -> 
             cell_class = f"cell-{info['level']}"
             risks_in_cell = grid.get((p, i), [])
             count = len(risks_in_cell)
-            cell_content = f"{info['emoji']} {score}"
+            cell_content = f"{score}"
             if count > 0:
                 cell_content += f" ({count})"
             html.append(f'<td class="{cell_class}">{cell_content}</td>')
@@ -223,37 +200,37 @@ def generate_html_matrix(risks: list, output_path: str = "risk_matrix.html") -> 
 
     html.append('</table></div>')
 
-    # 统计摘要
+    # Summary
     level_counts = {"red": 0, "orange": 0, "yellow": 0, "green": 0}
     for r in risks:
         level_counts[r["risk_level"]] = level_counts.get(r["risk_level"], 0) + 1
 
     html.append('<div class="summary">')
-    html.append(f'<span>🔴 极高: {level_counts["red"]}</span>')
-    html.append(f'<span>🟠 高: {level_counts["orange"]}</span>')
-    html.append(f'<span>🟡 中: {level_counts["yellow"]}</span>')
-    html.append(f'<span>🟢 低: {level_counts["green"]}</span>')
+    html.append(f'<span>Critical: {level_counts["red"]}</span>')
+    html.append(f'<span>High: {level_counts["orange"]}</span>')
+    html.append(f'<span>Medium: {level_counts["yellow"]}</span>')
+    html.append(f'<span>Low: {level_counts["green"]}</span>')
     html.append('</div>')
 
-    # 风险卡片列表
+    # Risk cards
     html.append('<div class="risk-list">')
     sorted_risks = sorted(risks, key=lambda r: r["score"], reverse=True)
     for r in sorted_risks:
         card_class = r["risk_level"]
         html.append(f'<div class="risk-card {card_class}">')
-        html.append(f'<h3>{r["risk_emoji"]} {r["name"]} <small>(风险值: {r["score"]})</small></h3>')
-        html.append(f'<div class="meta">')
-        html.append(f'概率: {r["probability_label"]} × 影响: {r["impact_label"]} | ')
+        html.append(f'<h3>{r["name"]} <small>(Score: {r["score"]})</small></h3>')
+        html.append('<div class="meta">')
+        html.append(f'Probability: {r["probability_label"]} x Impact: {r["impact_label"]} | ')
         if r["domain"]:
-            html.append(f'风险域: {r["domain"]} | ')
+            html.append(f'Domain: {r["domain"]} | ')
         if r["source"]:
-            html.append(f'来源: {r["source"]} | ')
+            html.append(f'Source: {r["source"]} | ')
         if r["reversibility"]:
-            html.append(f'可逆性: {r["reversibility"]}')
+            html.append(f'Reversibility: {r["reversibility"]}')
         html.append('</div>')
         if r["mitigation"]:
-            html.append(f'<p>缓解措施: {r["mitigation"]}</p>')
-        html.append(f'<p><strong>行动建议:</strong> {r["action"]}</p>')
+            html.append(f'<p>Mitigation: {r["mitigation"]}</p>')
+        html.append(f'<p><strong>Action:</strong> {r["action"]}</p>')
         html.append('</div>')
 
     html.append('</div>')
@@ -267,75 +244,85 @@ def generate_html_matrix(risks: list, output_path: str = "risk_matrix.html") -> 
     return output_path
 
 
-# ─── 使用示例 ──────────────────────────────────────────────
+def main() -> int:
+    """Main entry point."""
+    try:
+        # Sample risk data
+        sample_risks = [
+            build_risk_entry(
+                name="Key personnel departure",
+                probability=3, impact=5,
+                domain="Execution",
+                source="BALTHASAR",
+                reversibility="Partially reversible",
+                detectability="Early warning",
+                mitigation="Build knowledge documentation, develop backup candidates",
+            ),
+            build_risk_entry(
+                name="Regulatory policy shift",
+                probability=2, impact=5,
+                domain="Compliance",
+                source="BALTHASAR",
+                reversibility="Irreversible",
+                detectability="Post-event only",
+                mitigation="Maintain compliance buffer, establish policy tracking mechanism",
+            ),
+            build_risk_entry(
+                name="Competitor launches similar product first",
+                probability=4, impact=3,
+                domain="Timing",
+                source="CASPER",
+                reversibility="Irreversible",
+                detectability="Early warning",
+                mitigation="Accelerate MVP launch, strengthen differentiation",
+            ),
+            build_risk_entry(
+                name="Budget overrun",
+                probability=3, impact=3,
+                domain="Financial",
+                source="MELCHIOR",
+                reversibility="Partially reversible",
+                detectability="Early warning",
+                mitigation="Implement phased budget review gates, maintain 15% contingency reserve",
+            ),
+            build_risk_entry(
+                name="Team morale decline",
+                probability=3, impact=2,
+                domain="Human",
+                source="CASPER",
+                reversibility="Reversible",
+                detectability="Post-event only",
+                mitigation="Regular 1-on-1 communications, milestone celebration checkpoints",
+            ),
+        ]
+
+        # Determine output mode
+        if "--html" in sys.argv:
+            output_path = "risk_matrix.html"
+            for arg in sys.argv:
+                if arg.startswith("--output="):
+                    output_path = arg.split("=", 1)[1]
+            result = generate_html_matrix(sample_risks, output_path)
+            print(f"HTML risk matrix generated: {result}")
+        else:
+            print(generate_text_matrix(sample_risks))
+
+        # Optional JSON output
+        if "--json" in sys.argv:
+            print()
+            print("--- JSON Output ---")
+            print(json.dumps(sample_risks, ensure_ascii=False, indent=2))
+
+        return 0
+
+    except ValueError as e:
+        print(f"Input validation error: {e}", file=sys.stderr)
+        return 1
+    except Exception as e:
+        print(f"Runtime error: {e}", file=sys.stderr)
+        return 2
+
 
 if __name__ == "__main__":
-    # 示例风险数据
-    sample_risks = [
-        build_risk_entry(
-            name="核心技术人员离职",
-            probability=3,
-            impact=5,
-            domain="执行风险",
-            source="BALTHASAR",
-            reversibility="部分可逆",
-            detectability="可提前预警",
-            mitigation="建立知识文档化机制，培养备份人选",
-        ),
-        build_risk_entry(
-            name="监管政策突变",
-            probability=2,
-            impact=5,
-            domain="合规风险",
-            source="BALTHASAR",
-            reversibility="不可逆",
-            detectability="事后才发现",
-            mitigation="预留合规缓冲期，建立政策追踪机制",
-        ),
-        build_risk_entry(
-            name="竞品提前发布类似产品",
-            probability=4,
-            impact=3,
-            domain="时机风险",
-            source="CASPER",
-            reversibility="不可逆",
-            detectability="可提前预警",
-            mitigation="加速MVP上线，强化差异化定位",
-        ),
-        build_risk_entry(
-            name="预算超支",
-            probability=3,
-            impact=3,
-            domain="财务风险",
-            source="MELCHIOR",
-            reversibility="部分可逆",
-            detectability="可提前预警",
-            mitigation="设置阶段性预算审查节点，预留15%应急资金",
-        ),
-        build_risk_entry(
-            name="团队士气下降",
-            probability=3,
-            impact=2,
-            domain="人心风险",
-            source="CASPER",
-            reversibility="可逆",
-            detectability="事后才发现",
-            mitigation="定期1-on-1沟通，设置阶段性庆功节点",
-        ),
-    ]
-
-    # 判断输出模式
-    if "--html" in sys.argv:
-        output_path = "risk_matrix.html"
-        for arg in sys.argv:
-            if arg.startswith("--output="):
-                output_path = arg.split("=", 1)[1]
-        result = generate_html_matrix(sample_risks, output_path)
-        print(f"HTML风险矩阵已生成: {result}")
-    else:
-        print(generate_text_matrix(sample_risks))
-
-    # 同时输出JSON格式（方便其他脚本调用）
-    if "--json" in sys.argv:
-        print("\n\n--- JSON 格式输出 ---")
-        print(json.dumps(sample_risks, ensure_ascii=False, indent=2))
+    sys.exit(main())
+    
