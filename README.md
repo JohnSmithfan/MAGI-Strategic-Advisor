@@ -53,14 +53,14 @@ magi-advisor/
 
 ### For AI Agents
 
-1. Read [`README FOR AI.md`](README-FOR-AI.md) -- this is the authoritative build instruction
+1. Read `README FOR AI.md` -- this is the authoritative build instruction
 2. Follow the Generation Workflow (Section 8) to generate the complete project
 3. Run validation checks to ensure all constraints are satisfied
 
 ### For Human Users
 
 1. Clone this repository
-2. Explore the [`scripts/`](/scripst/) directory for executable tools:
+2. Explore the [`scripts/`](scripts/) directory for executable tools:
    - `python scripts/weighted-scoring.py` -- Run weighted scoring with sample data
    - `python scripts/risk-matrix-gen.py` -- Generate risk matrix (terminal output)
    - `python scripts/risk-matrix-gen.py --html` -- Generate HTML risk matrix visualization
