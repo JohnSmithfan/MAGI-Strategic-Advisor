@@ -60,7 +60,7 @@ magi-advisor/
 ### For Human Users
 
 1. Clone this repository
-2. Explore the [`scripts/`](scripst/) directory for executable tools:
+2. Explore the [`scripts/`](/scripst/) directory for executable tools:
    - `python scripts/weighted-scoring.py` -- Run weighted scoring with sample data
    - `python scripts/risk-matrix-gen.py` -- Generate risk matrix (terminal output)
    - `python scripts/risk-matrix-gen.py --html` -- Generate HTML risk matrix visualization
