@@ -53,7 +53,7 @@ magi-advisor/
 
 ### For AI Agents
 
-1. Read `README FOR AI.md` -- this is the authoritative build instruction
+1. Read [`README FOR AI.md`](README%20FOR%20AI.md) -- this is the authoritative build instruction
 2. Follow the Generation Workflow (Section 8) to generate the complete project
 3. Run validation checks to ensure all constraints are satisfied
 
