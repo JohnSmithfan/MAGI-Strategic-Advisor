@@ -21,6 +21,7 @@ The following constraints are non-negotiable. Every generated file must pass all
 | HC-05 | Files in prompts/ are user-facing copy-paste artifacts, not agent-auto-invoked skills | prompts/ files must be self-contained and portable to any AI chat window |
 | HC-06 | The project must follow harness engineering principles | Every module must be independently testable with defined inputs and outputs |
 | HC-07 | The project must satisfy five design principles: standardized, generic, modular, compact, automated | See Section 6 for detailed compliance checklist |
+| HC-08 | All projects must include a LICENSE file; default is GNU GPL V3 unless explicitly overridden by project maintainers | Reject if no LICENSE file exists in project root |
 
 ---
 
@@ -30,8 +31,13 @@ The project must produce exactly the following structure. No additional files ma
 
 ```
 magi-advisor/
-|-- SKILL.md
+|-- LICENSE
+|-- .gitignore
+|-- README.md
 |-- README FOR AI.md
+|-- CHANGELOG.md
+|-- CONTRIBUTING.md
+|-- SKILL.md
 |-- references/
 |   |-- magi-framework.md
 |   |-- decision-matrix.md
@@ -50,6 +56,11 @@ magi-advisor/
 |------|------|-----------|----------|
 | SKILL.md | Entry index and quick-reference | Agent runtime on every invocation | Trigger conditions, capability table, file routing map, output format spec |
 | README FOR AI.md | Build instruction for AI agents | AI agent at project generation time | This document |
+| README.md | GitHub front-page entry point | Human users visiting the repository | Project overview, features, quick start, links to docs |
+| LICENSE | GNU GPL V3 license text | Legal compliance; required by open-source conventions | Full GNU General Public License v3.0 text |
+| .gitignore | Git ignore patterns | Version control hygiene; prevents committing unnecessary files | Patterns for bytecode, IDE files, OS metadata, virtual envs |
+| CHANGELOG.md | Version history | Contributors and users tracking project changes | Chronological list of notable changes per version |
+| CONTRIBUTING.md | Contribution guidelines | Contributors following project conventions | Code of conduct, development setup, PR process, commit conventions |
 | references/magi-framework.md | Core decision framework definition | Agent when analysis mode is activated | Persona definitions, voting rules, confidence levels, weight system |
 | references/decision-matrix.md | Scoring matrix templates | Agent when quantitative evaluation is needed | Single-option matrix, multi-option matrix, veto checklist, scoring norms |
 | references/method-patterns.md | All code templates and implementation patterns | Agent when generating or modifying scripts | Python function signatures, class definitions, data structures, CLI interfaces |
@@ -88,7 +99,6 @@ SKILL.md must contain exactly these sections in this order:
 
 ## File Routing Map
 [Table: user intent -> primary file to load -> secondary files if needed]
-
 ```
 
 ### 3.2 Size Constraint
@@ -128,7 +138,6 @@ The following shows the required heading structure for method-patterns.md. Headi
 ### 4.1 Adding a New Persona
 ### 4.2 Adding a New Risk Domain
 ### 4.3 Adding a New Output Format
-
 ```
 
 ### 4.2 Code Template Format
@@ -193,7 +202,6 @@ Files in prompts/ operate in a fundamentally different mode from all other proje
 
 ## Customization Notes
 [Variables the user should replace before pasting, marked with {{placeholder}} syntax]
-
 ```
 
 ### 5.3 Prompt File Definitions
@@ -279,7 +287,6 @@ Side effects: [none | file write to X | stdout only]
 Exit codes: 0 = success, 1 = input validation error, 2 = runtime error
 Dependencies: [stdlib only | list external packages]
 """
-
 ```
 
 ### 7.2 Deterministic Behavior
@@ -297,7 +304,6 @@ Each function in method-patterns.md must be verifiable with a minimal test case:
 assert classify_risk(25)["level"] == "red"
 assert classify_risk(1)["level"] == "green"
 assert magi_score(sample)["total"] > 0
-
 ```
 
 ---
@@ -309,6 +315,18 @@ When an AI agent is tasked with generating this project, it must follow this exa
 ### Step 1: Scaffold
 
 Create the directory structure exactly as specified in Section 2. Do not add, remove, or rename any file.
+
+### Step 1.5: Create GitHub-Standard Files
+
+After scaffolding the directory structure, create the following GitHub-standard files in the project root:
+
+1. **LICENSE** -- Copy the full GNU GPL V3 text (see references/method-patterns.md for the exact text to use)
+2. **.gitignore** -- Create with the Python project ignore patterns defined in references/method-patterns.md
+3. **README.md** -- Create the GitHub front-page entry point with project overview, features, and quick start guide
+4. **CHANGELOG.md** -- Create with the Keep a Changelog format, starting with the initial version entry
+5. **CONTRIBUTING.md** -- Create with contribution guidelines, code of conduct, and development setup instructions
+
+These files are essential for open-source project hygiene and must be created before proceeding to Step 2.
 
 ### Step 2: Generate references/ First
 
@@ -357,9 +375,9 @@ VALIDATION CHECKLIST
 [ ] HC-05: prompts/ files are self-contained and portable
 [ ] HC-06: All scripts have INTERFACE CONTRACT and pass minimal assertions
 [ ] HC-07: All five design principles pass (Section 6)
-[ ] File count: exactly 8 files (excluding this README)
+[ ] HC-08: LICENSE file exists in project root
+[ ] File count: exactly 13 files (excluding this README FOR AI.md)
 [ ] Directory count: exactly 3 subdirectories (references/, prompts/, scripts/)
-
 ```
 
 For programmatic verification, create a `validate_project.py` script in the project root that checks all HC constraints automatically. The script should:
@@ -369,8 +387,9 @@ For programmatic verification, create a `validate_project.py` script in the proj
 3. Scan for code blocks in SKILL.md and README FOR AI.md outside exempted sections (HC-04)
 4. Verify prompts/ files are self-contained with no cross-references to other project files (HC-05)
 5. Verify all scripts have INTERFACE CONTRACT docstrings (HC-06)
-6. Count total files (excluding README) and verify == 8
-7. Verify directory structure matches the defined tree exactly
+6. Verify LICENSE file exists (HC-08)
+7. Count total files (excluding README FOR AI.md) and verify == 13
+8. Verify directory structure matches the defined tree exactly
 
 Run this script after Step 6 of the Generation Workflow to automate validation.
 
@@ -386,6 +405,8 @@ When extending this project with new capabilities, follow these rules:
 | Add a new script | Place in scripts/, add interface contract, add entry to method-patterns.md |
 | Add a new reference | Place in references/, add routing entry to SKILL.md File Routing Map |
 | Add a new persona | Extend magi-framework.md, update decision-matrix.md dimensions, update method-patterns.md schemas |
+| Update LICENSE | Only modify if project licensing changes; update Version and Change Log in CHANGELOG.md accordingly |
+| Update project metadata files | When adding/removing files, update README.md, CHANGELOG.md, and this README FOR AI.md file tree accordingly |
 | Modify existing files | Update the file, then verify SKILL.md index entries still point to correct locations |
 
 ---
@@ -414,6 +435,10 @@ The following practices are explicitly forbidden:
 | MELCHIOR | The rational-scientist persona; data-driven, logic-first analysis |
 | BALTHASAR | The prudent-guardian persona; risk-averse, bottom-line-oriented analysis |
 | CASPER | The intuitive-observer persona; holistic, pattern-recognition analysis |
+| GPL | GNU General Public License; a free software license published by the Free Software Foundation |
+| .gitignore | A file specifying intentionally untracked files that Git should ignore |
+| CHANGELOG | A file documenting notable changes to a project, typically organized by version |
+| CONTRIBUTING | A file providing guidelines for how others can contribute to a project |
 | Harness engineering | An approach where every component is a testable unit with defined inputs, outputs, and pass/fail criteria |
 | Dual-mode | The separation between agent-invoked files (SKILL.md, references/, scripts/) and human-facing files (prompts/) |
 | Progressive disclosure | The pattern where SKILL.md provides only routing; detailed content is loaded on demand from reference files |
@@ -424,5 +449,5 @@ The following practices are explicitly forbidden:
 ## 12. Version and Change Log
 
 | Version | Date | Change |
-|---------|------|--------|
-| 1.0.0 | 2026-09-11 | Initial release. Full project specification with 8 deliverable files across 3 module directories (excluding this README). |
+
+---
