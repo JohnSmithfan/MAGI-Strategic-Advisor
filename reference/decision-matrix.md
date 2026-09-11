@@ -1,90 +1,79 @@
-# MAGI 决策矩阵模板
+# MAGI Decision Matrix Templates
 
-## 用途
-将模糊的战略决策转化为可量化、可追溯的结构化评估。支持单方案可行性验证和多方案横向比选两种模式。
+## Purpose
 
----
+Transform ambiguous strategic decisions into quantifiable, traceable structured evaluations. Supports both single-option feasibility validation and multi-optionside-by-side comparison.
 
-## 一、基础决策矩阵（单方案评估）
+## 1. Single-Option Evaluation Matrix
 
-### 模板结构
+### Template Structure
 
-| 维度 | 权重 | 得分(1-10) | 加权得分 | 判断来源 | 备注 |
-|------|------|-----------|---------|---------|------|
-| 收益潜力 | 0.15 | | | MELCHIOR | |
-| 数据支撑度 | 0.10 | | | MELCHIOR | |
-| 逻辑可行性 | 0.10 | | | MELCHIOR | |
-| 风险可控性 | 0.15 | | | BALTHASAR | |
-| 伦理合规性 | 0.10 | | | BALTHASAR | |
-| 长期安全性 | 0.10 | | | BALTHASAR | |
-| 时机匹配度 | 0.10 | | | CASPER | |
-| 团队接受度 | 0.10 | | | CASPER | |
-| 趋势契合度 | 0.10 | | | CASPER | |
-| **合计** | **1.00** | — | **___** | — | — |
+| Dimension | Weight | Score (1-10) | Weighted Score | Source | Notes |
+|-----------|--------|-------------|---------------|--------|-------|
+| Revenue Potential | 0.15 | | | MELCHIOR | |
+| Data Support | 0.10 | | | MELCHIOR | |
+| Logical Feasibility | 0.10 | | | MELCHIOR | |
+| Risk Controllability | 0.15 | | | BALTHASAR | |
+| Ethical Compliance | 0.10 | | | BALTHASAR | |
+| Long-term Safety | 0.10 | | | BALTHASAR | |
+| Timing Alignment | 0.10 | | | CASPER | |
+| Team Acceptance | 0.10 | | | CASPER | |
+| Trend Fit | 0.10 | | | CASPER | |
+| **Total** | **1.00** | — | **___** | — | — |
 
-### 判定规则
+### Verdict Rules
 
-| 综合加权得分 | 判定 | 行动建议 |
-|-------------|------|---------|
-| ≥ 8.0 | ✅ 强烈推荐 | 立即推进，分配资源 |
-| 6.5 - 7.9 | ⚠️ 有条件推荐 | 补齐短板后可推进 |
-| 5.0 - 6.4 | 🔄 需重新设计 | 核心假设需验证 |
-| < 5.0 | ❌ 不推荐 | 暂停或放弃 |
+| Weighted Score | Verdict | Action |
+|---------------|---------|--------|
+| >= 8.0 | Strongly recommend | Proceed immediately, allocate resources |
+| 6.5 - 7.9 | Conditionally recommend | Proceed after addressing weaknesses |
+| 5.0 - 6.4 | Redesign needed | Core assumptions require validation |
+| < 5.0 | Not recommended | Suspend or abandon |
 
----
+## 2. Multi-Option Comparison Matrix
 
-## 二、多方案比选矩阵
+### Template Structure
 
-### 模板结构
+| Evaluation Dimension | Weight | Option A | Option B | Option C |
+|---------------------|--------|----------|----------|----------|
+| **MELCHIOR (Rational)** | | | | |
+| Revenue Potential | 0.15 | /10 | /10 | /10 |
+| Data Support | 0.10 | /10 | /10 | /10 |
+| Logical Feasibility | 0.10 | /10 | /10 | /10 |
+| MELCHIOR Subtotal | 0.35 | __/10 | __/10 | __/10 |
+| **BALTHASAR (Prudent)** | | | | |
+| Risk Controllability | 0.15 | /10 | /10 | /10 |
+| Ethical Compliance | 0.10 | /10 | /10 | /10 |
+| Long-term Safety | 0.10 | /10 | /10 | /10 |
+| BALTHASAR Subtotal | 0.35 | __/10 | __/10 | __/10 |
+| **CASPER (Intuitive)** | | | | |
+| Timing Alignment | 0.10 | /10 | /10 | /10 |
+| Team Acceptance | 0.10 | /10 | /10 | /10 |
+| Trend Fit | 0.10 | /10 | /10 | /10 |
+| CASPER Subtotal | 0.30 | __/10 | __/10 | __/10 |
+| **Weighted Total** | **1.00** | **__** | **__** | **__** |
+| **Vote Result** | — | recommend/conditional/not | recommend/conditional/not | recommend/conditional/not |
 
-| 评估维度 | 权重 | 方案A | 方案B | 方案C |
-|---------|------|------|------|------|
-| **MELCHIOR（理性）** | | | | |
-| 收益潜力 | 0.15 | /10 | /10 | /10 |
-| 数据支撑度 | 0.10 | /10 | /10 | /10 |
-| 逻辑可行性 | 0.10 | /10 | /10 | /10 |
-| MELCHIOR 小计 | 0.35 | __/10 | __/10 | __/10 |
-| **BALTHASAR（审慎）** | | | | |
-| 风险可控性 | 0.15 | /10 | /10 | /10 |
-| 伦理合规性 | 0.10 | /10 | /10 | /10 |
-| 长期安全性 | 0.10 | /10 | /10 | /10 |
-| BALTHASAR 小计 | 0.35 | __/10 | __/10 | __/10 |
-| **CASPER（直觉）** | | | | |
-| 时机匹配度 | 0.10 | /10 | /10 | /10 |
-| 团队接受度 | 0.10 | /10 | /10 | /10 |
-| 趋势契合度 | 0.10 | /10 | /10 | /10 |
-| CASPER 小计 | 0.30 | __/10 | __/10 | __/10 |
-| **综合加权总分** | **1.00** | **__** | **__** | **__** |
-| **投票结果** | — | ✅/⚠️/❌ | ✅/⚠️/❌ | ✅/⚠️/❌ |
+### Comparison Rules
 
-### 比选规则
-1. 按综合加权总分降序排列
-2. 若最高分方案在任一维度得分 < 4，标记为"致命短板"
-3. 若前三名分差 < 0.5，建议补充信息后重新评估
-4. 最终推荐需同时满足：综合分最高 + 无致命短板 + 至少两票赞成
+1. Sort by weighted total score descending
+2. If the top-scoring option scores < 4 in any dimension, flag as "critical weakness"
+3. If top three scores differ by < 0.5, recommend gathering more information
+4. Final recommendation requires: highest total + no critical weaknesses + at least 2 votes in favor
 
----
+## 3. Veto Checklist
 
-## 三、一票否决清单
+The following conditions trigger automatic rejection regardless of total score:
 
-以下任一条件触发时，无论综合得分多高，该方案直接判定为❌：
+- Irreversible legal or compliance risk exists
+- Worst-case scenario exceeds organizational tolerance threshold
+- Core assumptions unverified and verification cost is prohibitively high
+- Key stakeholders explicitly oppose and positions cannot be reconciled
+- Time window has closed or resource gap cannot be bridged
 
-- [ ] 存在不可逆的法律/合规风险
-- [ ] 最坏情况超出组织承受底线
-- [ ] 核心假设未经验证且验证成本过高
-- [ ] 关键利益相关方明确反对且无法调和
-- [ ] 时间窗口已关闭或资源缺口无法弥补
+## 4. Filling Guidelines
 
----
-
-## 四、使用说明
-
-### 填写规范
-1. **得分标准**：1-3分为"差"，4-6分为"中"，7-10分为"优"
-2. **权重调整**：默认权重适用于大多数场景；高风险场景可将BALTHASAR权重上调至0.45；创新驱动场景可将CASPER权重上调至0.35
-3. **判断来源**：每个维度的打分必须标注来自哪个人格视角，确保可追溯
-4. **分歧记录**：若同一维度三个人格打分差异 > 3分，需在备注栏记录分歧原因
-
-### 动态调整
-- 权重不是固定的，应根据决策性质灵活调整
-- 建议在首次使用后复盘，校准适合自己团队的权重体系
+1. **Scoring Standards**: 1-3 = Poor, 4-6 = Moderate, 7-10 = Excellent
+2. **Weight Adjustment**: Default weights suit most scenarios; increase BALTHASAR to 0.45 for high-risk scenarios; increase CASPER to 0.35 for innovation-driven scenarios
+3. **Source Attribution**: Each dimension score must be attributed to a specific persona for traceability
+4. **Discrepancy Recording**: If three personas differ by > 3 points on the same dimension, record the reason in the notes column
