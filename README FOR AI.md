@@ -49,15 +49,28 @@ contract and to the relevant indexes.
 ```text
 magi-advisor/
 |-- .editorconfig
+|-- .gitattributes
 |-- .gitignore
 |-- CHANGELOG.md
 |-- CODE_OF_CONDUCT.md
 |-- CONTRIBUTING.md
 |-- LICENSE
+|-- Makefile
 |-- README FOR AI.md
 |-- README.md
 |-- SECURITY.md
+|-- SUPPORT.md
 |-- SKILL.md
+|-- .github/
+|   |-- CODEOWNERS
+|   |-- dependabot.yml
+|   |-- PULL_REQUEST_TEMPLATE.md
+|   |-- ISSUE_TEMPLATE/
+|   |   |-- bug_report.yml
+|   |   |-- config.yml
+|   |   |-- feature_request.yml
+|   |-- workflows/
+|       |-- ci.yml
 |-- references/
 |   |-- decision-matrix.md
 |   |-- magi-framework.md

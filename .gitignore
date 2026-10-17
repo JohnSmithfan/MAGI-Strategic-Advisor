@@ -88,3 +88,8 @@ docs/_build/
 .env.local
 .env.*.local
 !.env.example
+
+# ============================================
+# WorkBuddy local workspace data (reports, memory, logs)
+# ============================================
+.workbuddy/

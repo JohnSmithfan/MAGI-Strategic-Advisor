@@ -67,7 +67,10 @@ def validate(root: Path) -> list[str]:
     for path in root.rglob("*"):
         if not path.is_file() or ".git" in path.parts:
             continue
-        text = path.read_text(encoding="utf-8")
+        try:
+            text = path.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            continue  # Binary files (for example __pycache__ bytecode) cannot contain emoji
         if contains_emoji(text):
             findings.append(f"Emoji character found: {path.relative_to(root)}")
 

@@ -62,11 +62,10 @@ Before submitting a pull request:
 
 1. Fork the repository and create your branch from `main`
 2. Make sure your code follows the project's coding standards
-3. Update documentation as needed
-4. Write or update tests as needed
-5. Ensure all tests pass
-6. Update the CHANGELOG.md with your changes
-7. Submit the pull request with a clear description of the changes
+3. Run `make validate` (or `python scripts/validate-project.py`) and ensure it passes
+4. Update documentation as needed
+5. Update the CHANGELOG.md with your changes
+6. Submit the pull request with a clear description of the changes
 
 ---
 
@@ -89,8 +88,8 @@ cd magi-advisor
 python3 -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-# Install dependencies (if any)
-pip install -r requirements.txt
+# No third-party dependencies are required: every script uses the
+# Python standard library only (see README FOR AI.md).
 
 # Run the scripts to verify setup
 python scripts/weighted-scoring.py
