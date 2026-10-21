@@ -30,7 +30,7 @@ sections below before requesting review.
 - [ ] `python -m compileall -q scripts` passes
 - [ ] Manually exercised the changed scripts or reviewed the changed documents
 
-## Hard Constraints (from README FOR AI.md)
+## Hard Constraints (from README_FOR_AI.md)
 
 - [ ] All content is in English
 - [ ] No emoji characters anywhere in the repository

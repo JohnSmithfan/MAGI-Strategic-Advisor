@@ -15,7 +15,7 @@ get help, report problems, and request changes.
 ## Before You File
 
 1. Read `README.md` and `SKILL.md` for the documented behavior.
-2. Read `README FOR AI.md` for the authoritative repository contract.
+2. Read `README_FOR_AI.md` for the authoritative repository contract.
 3. Search existing issues and discussions to avoid duplicates.
 
 ## What to Include

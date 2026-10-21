@@ -47,7 +47,7 @@ magi-advisor/
 |-- .gitignore                 (Git ignore patterns)
 |-- .gitattributes             (Git line-ending and binary rules)
 |-- README.md                  (This file - GitHub front page)
-|-- README FOR AI.md           (AI agent build instructions)
+|-- README_FOR_AI.md           (AI agent build and regeneration contract)
 |-- CHANGELOG.md               (Version history)
 |-- CONTRIBUTING.md            (Contribution guidelines)
 |-- CODE_OF_CONDUCT.md        (Community standards)
@@ -85,9 +85,8 @@ magi-advisor/
 
 ### For AI Agents
 
-1. Read [`README FOR AI.md`](README%20FOR%20AI.md) -- this is the authoritative build instruction
-2. Follow the Generation Workflow (Section 8) to generate the complete project
-3. Run validation checks to ensure all constraints are satisfied
+1. **Runtime use**: read [`SKILL.md`](SKILL.md) for trigger detection and routing, then load the referenced files under [`references/`](references/) on demand
+2. **Repository regeneration**: paste [`README_FOR_AI.md`](README_FOR_AI.md) into a capable AI agent and ask it to rebuild this project from the contract. The agent regenerates the file tree, governance files, and per-file contracts; content-layer files (`references/`, `prompts/`, script bodies) are written to satisfy the documented contracts. Finish with `python scripts/validate-project.py` and iterate until it passes
 
 ### For Human Users
 
@@ -126,7 +125,7 @@ This project adheres to five core design principles:
 
 The project enforces language, no-emoji, compact-index, code-placement,
 prompt-portability, harness-engineering, design, and licensing requirements.
-See `README FOR AI.md` for the authoritative contract and audit record.
+See `README_FOR_AI.md` for the authoritative contract and audit record.
 
 ---
 

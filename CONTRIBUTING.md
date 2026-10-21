@@ -89,7 +89,7 @@ python3 -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # No third-party dependencies are required: every script uses the
-# Python standard library only (see README FOR AI.md).
+# Python standard library only (see README_FOR_AI.md).
 
 # Run the scripts to verify setup
 python scripts/weighted-scoring.py
@@ -103,7 +103,7 @@ magi-advisor/
 |-- LICENSE
 |-- .gitignore
 |-- README.md
-|-- README FOR AI.md
+|-- README_FOR_AI.md
 |-- CHANGELOG.md
 |-- CONTRIBUTING.md
 |-- CODE_OF_CONDUCT.md
@@ -136,7 +136,7 @@ magi-advisor/
 - All comments and docstrings must be in English
 - No emoji characters in any code or documentation (enforced by HC-02)
 - Include docstrings for all public functions and classes
-- Include interface contracts in all scripts (see Section 7.1 of README FOR AI.md)
+- Include interface contracts in all scripts (see README_FOR_AI.md)
 
 ### Markdown Documentation
 
@@ -171,7 +171,7 @@ Examples:
 ```
 feat(prompts): add 03-decision-synthesis prompt
 fix(scripts): correct weight calculation in weighted-scoring.py
-docs: update file tree in README FOR AI.md
+docs: update file tree in README_FOR_AI.md
 ```
 
 ---

@@ -4,7 +4,9 @@
 
 This document is the authoritative implementation and maintenance contract for
 the MAGI Strategic Advisor repository. It is written in English so that the
-skill can be compiled and maintained consistently by any AI agent.
+skill can be compiled and maintained consistently by any AI agent. It also
+serves as the regeneration specification: an agent that receives this file can
+rebuild the repository by following the Agent Regeneration Protocol below.
 
 ## Audit Findings and Required Remediation
 
@@ -56,7 +58,7 @@ magi-advisor/
 |-- CONTRIBUTING.md
 |-- LICENSE
 |-- Makefile
-|-- README FOR AI.md
+|-- README_FOR_AI.md
 |-- README.md
 |-- SECURITY.md
 |-- SUPPORT.md
@@ -178,3 +180,31 @@ Before accepting a change, verify:
 When a new module is needed, place it in the narrowest appropriate layer,
 document its interface, add its routing entry, and update this contract only
 when the public structure changes.
+
+## Agent Regeneration Protocol
+
+An AI agent can rebuild this repository from this contract. Follow these steps
+in order and stop at the first failure:
+
+1. Read this contract in full before writing any file.
+2. Create the exact file tree in Required File Tree. Do not add, rename, or
+   omit files.
+3. Write the root governance files (LICENSE, README.md, CONTRIBUTING.md,
+   CODE_OF_CONDUCT.md, SECURITY.md, SUPPORT.md, CHANGELOG.md,
+   .editorconfig, .gitattributes, .gitignore, Makefile) and the .github/
+   configuration according to their documented responsibilities.
+4. Write SKILL.md with the six required sections in order, below 120 lines.
+5. Write the references/ files as the single source of truth for schemas,
+   signatures, templates, and CLI contracts.
+6. Write the prompts/ files as standalone, portable, user-facing artifacts.
+7. Implement the scripts/ tools with argparse CLIs, explicit interface
+   contracts, deterministic behavior, and standard-library dependencies only.
+8. Run `python scripts/validate-project.py` and fix every finding until it
+   prints `Validation passed.`
+9. Report any deviation from the tree or the hard constraints explicitly.
+   Never silently add or rename files.
+
+Scope note: this protocol regenerates structure, contracts, and governance.
+Domain knowledge content (framework definitions, matrix parameters, prompt
+bodies) must satisfy the documented contracts but is not contained in this
+file; copy it from the published repository when content parity matters.

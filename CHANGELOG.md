@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2026-10-22
+
+### Fixed
+
+- Completed the `README FOR AI.md` to `README_FOR_AI.md` rename across `scripts/validate-project.py`, `README.md`, `README_FOR_AI.md`, `CONTRIBUTING.md`, `SUPPORT.md`, and the pull request template; validation passes again.
+- Removed the stale `Section 8` and `Section 7.1` cross-references.
+
+### Changed
+
+- README.md separates the two AI-agent modes: runtime use via SKILL.md and repository regeneration via README_FOR_AI.md.
+- README_FOR_AI.md adds an Agent Regeneration Protocol section.
+
 ## [0.2.0] - 2026-10-17
 
 ### Added

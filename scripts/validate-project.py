@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the repository against the README FOR AI contract.
+"""Validate the repository against the README_FOR_AI contract.
 
 INTERFACE CONTRACT
 ==================
@@ -23,7 +23,7 @@ REQUIRED_FILES = (
     "CODE_OF_CONDUCT.md",
     "CONTRIBUTING.md",
     "LICENSE",
-    "README FOR AI.md",
+    "README_FOR_AI.md",
     "README.md",
     "SECURITY.md",
     "SKILL.md",
@@ -95,7 +95,7 @@ def validate(root: Path) -> list[str]:
                 findings.append(f"Missing argparse CLI: {script_name}")
 
     stale_paths = re.compile(r"(SKILL\.MD|Changelog\.md|prompts/(risk-assessment|multi-option-compare|strategic-analysis)\.md)")
-    for path in (root / "README FOR AI.md", root / "SKILL.md", root / "README.md"):
+    for path in (root / "README_FOR_AI.md", root / "SKILL.md", root / "README.md"):
         if path.is_file() and stale_paths.search(path.read_text(encoding="utf-8")):
             findings.append(f"Stale path reference: {path.relative_to(root)}")
 
