@@ -68,6 +68,9 @@ tmp/
 temp/
 *.tmp
 
+# One-off local deliverables (not part of the published skill; never push to GitHub)
+ASSESSMENT_REPORT.md
+
 # ============================================
 # Git
 # ============================================
