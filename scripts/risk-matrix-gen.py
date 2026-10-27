@@ -30,6 +30,15 @@ PROBABILITY_LABELS = {1: "Very Low", 2: "Low", 3: "Medium", 4: "High", 5: "Very 
 IMPACT_LABELS = {1: "Negligible", 2: "Minor", 3: "Moderate", 4: "Severe", 5: "Catastrophic"}
 
 
+def _count_levels(risks: list) -> dict:
+    """Tally risks by severity level for summaries."""
+    level_counts = {"red": 0, "orange": 0, "yellow": 0, "green": 0}
+    for risk in risks:
+        level = risk["risk_level"]
+        level_counts[level] = level_counts.get(level, 0) + 1
+    return level_counts
+
+
 def classify_risk(score: int) -> dict:
     """Classify a risk score into severity level."""
     for level, info in RISK_LEVELS.items():
@@ -108,9 +117,7 @@ def generate_text_matrix(risks: list) -> str:
         lines.append("")
 
     # Summary
-    level_counts = {"red": 0, "orange": 0, "yellow": 0, "green": 0}
-    for r in risks:
-        level_counts[r["risk_level"]] = level_counts.get(r["risk_level"], 0) + 1
+    level_counts = _count_levels(risks)
 
     lines.append("  " + "-" * 62)
     lines.append("  Summary")
@@ -202,9 +209,7 @@ def generate_html_matrix(risks: list, output_path: str = "risk_matrix.html") -> 
     html.append('</table></div>')
 
     # Summary
-    level_counts = {"red": 0, "orange": 0, "yellow": 0, "green": 0}
-    for r in risks:
-        level_counts[r["risk_level"]] = level_counts.get(r["risk_level"], 0) + 1
+    level_counts = _count_levels(risks)
 
     html.append('<div class="summary">')
     html.append(f'<span>Critical: {level_counts["red"]}</span>')
@@ -327,4 +332,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-    

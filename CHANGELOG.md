@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.2] - 2026-10-27
+
+### Fixed
+
+- Resolved historical burden: `scripts/validate-project.py` `REQUIRED_FILES` now matches the documented Required File Tree (added `.gitattributes`, `Makefile`, `SUPPORT.md`, and the `.github/` governance set). Validation still passes.
+- Removed crappy code: eliminated duplicated `level_counts` logic in `scripts/risk-matrix-gen.py` by extracting a `_count_levels` helper.
+- Removed trailing blank lines at the end of `scripts/risk-matrix-gen.py` (violated `.editorconfig`).
+
+### Changed
+
+- Commented out obsolete `stale_paths` regex branches referencing pre-0.2.0 prompt filenames (`risk-assessment.md`, `multi-option-compare.md`, `strategic-analysis.md`); retained the casing guards (`SKILL.MD`, `Changelog.md`).
+- `CONTRIBUTING.md` adds File Hygiene and Engineering Hygiene standards forbidding messy/crappy code and new historical burden.
+
 ## [0.2.1] - 2026-10-22
 
 ### Fixed

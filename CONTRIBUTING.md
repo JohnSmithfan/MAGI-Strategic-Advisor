@@ -176,6 +176,41 @@ docs: update file tree in README_FOR_AI.md
 
 ---
 
+## Hygiene Standards
+
+These standards exist because the project was burned by historical burden and
+crappy code before. They are mandatory for every contribution.
+
+### File Hygiene
+
+- No messy code: no spaghetti logic, no copy-paste duplication, no dead or
+  commented-out code scattered through the tree. Each file keeps one
+  responsibility (see Responsibility Boundaries in README_FOR_AI.md).
+- No historical burden in files: do not leave legacy references, obsolete
+  guards, or renamed-leftover paths in live code. If a legacy reference must be
+  retained for traceability, isolate it in a single clearly marked
+  `HISTORICAL BURDEN` comment block - never leave it as live, half-dead logic.
+- No trailing whitespace or stray blank lines (enforced by `.editorconfig`).
+- No emoji characters in any file (HC-02).
+- Keep the documented file tree in sync: any added, renamed, or removed file
+  must update the trees in both `README_FOR_AI.md` and `README.md`.
+
+### Engineering Hygiene
+
+- Do not introduce messy or crappy code: prefer parameters over hardcoded
+  assumptions, keep core logic deterministic, and follow harness engineering
+  (explicit inputs, outputs, side effects, exit codes, testable boundaries).
+- Do not add historical burden: `scripts/validate-project.py` is the single
+  source of truth for required files. Its `REQUIRED_FILES` list MUST stay in
+  sync with the Required File Tree in `README_FOR_AI.md`. A divergence between
+  the two is a historical burden and must be reconciled, not worked around.
+- Every change must keep `make validate` green; CI runs it on every pull
+  request.
+- Place new modules in the narrowest appropriate layer and document their
+  interface before exposing them in `SKILL.md`.
+
+---
+
 ## Pull Request Process
 
 1. Update the README.md or CHANGELOG.md with details of changes if applicable

@@ -18,15 +18,25 @@ from pathlib import Path
 
 REQUIRED_FILES = (
     ".editorconfig",
+    ".gitattributes",
     ".gitignore",
     "CHANGELOG.md",
     "CODE_OF_CONDUCT.md",
     "CONTRIBUTING.md",
     "LICENSE",
+    "Makefile",
     "README_FOR_AI.md",
     "README.md",
     "SECURITY.md",
+    "SUPPORT.md",
     "SKILL.md",
+    ".github/CODEOWNERS",
+    ".github/dependabot.yml",
+    ".github/PULL_REQUEST_TEMPLATE.md",
+    ".github/ISSUE_TEMPLATE/bug_report.yml",
+    ".github/ISSUE_TEMPLATE/config.yml",
+    ".github/ISSUE_TEMPLATE/feature_request.yml",
+    ".github/workflows/ci.yml",
     "references/decision-matrix.md",
     "references/magi-framework.md",
     "references/method-patterns.md",
@@ -94,7 +104,15 @@ def validate(root: Path) -> list[str]:
             if "argparse" not in script_text:
                 findings.append(f"Missing argparse CLI: {script_name}")
 
-    stale_paths = re.compile(r"(SKILL\.MD|Changelog\.md|prompts/(risk-assessment|multi-option-compare|strategic-analysis)\.md)")
+    # HISTORICAL BURDEN (commented out, retained for traceability):
+    # The pattern below referenced the pre-0.2.0 prompt filenames
+    # (prompts/risk-assessment.md, prompts/multi-option-compare.md,
+    # prompts/strategic-analysis.md). Those names were superseded by the
+    # current 01-/02- numbered scheme and the files never existed under
+    # these names. Kept disabled rather than deleted so the rename history
+    # remains auditable.
+    #     r"prompts/(risk-assessment|multi-option-compare|strategic-analysis)\.md"
+    stale_paths = re.compile(r"(SKILL\.MD|Changelog\.md)")
     for path in (root / "README_FOR_AI.md", root / "SKILL.md", root / "README.md"):
         if path.is_file() and stale_paths.search(path.read_text(encoding="utf-8")):
             findings.append(f"Stale path reference: {path.relative_to(root)}")
